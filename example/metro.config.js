@@ -1,30 +1,29 @@
-const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
 const path = require('path');
-const escape = require('escape-string-regexp');
-const exclusionList = require('metro-config/src/defaults/exclusionList');
+const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
 
-const root = path.resolve(__dirname, '..');
-const modules = path.join(__dirname, 'node_modules');
+const projectRoot = __dirname;
+const monorepoRoot = path.resolve(projectRoot, '..');
 
 /**
  * Metro configuration
- * https://facebook.github.io/metro/docs/configuration
+ * https://reactnative.dev/docs/metro
  *
- * @type {import('metro-config').MetroConfig}
+ * @type {import('@react-native/metro-config').MetroConfig}
  */
 const config = {
-  projectRoot: __dirname,
-  watchFolders: [root],
-  
+  projectRoot,
+  watchFolders: [monorepoRoot],
   resolver: {
-    blockList: exclusionList([
-      // Exclude parent node_modules to avoid duplicate React instances
-      new RegExp(`^${escape(path.join(root, 'node_modules'))}\\/.*$`),
-    ]),
+    // Block parent node_modules to avoid duplicate React instances
+    blockList: [
+      new RegExp(`${path.resolve(monorepoRoot, 'node_modules')}/react/.*`),
+      new RegExp(`${path.resolve(monorepoRoot, 'node_modules')}/react-native/.*`),
+    ],
+    nodeModulesPaths: [
+      path.resolve(projectRoot, 'node_modules'),
+    ],
     extraNodeModules: {
-      'react': path.join(modules, 'react'),
-      'react-native': path.join(modules, 'react-native'),
-      '@babel/runtime': path.join(modules, '@babel/runtime'),
+      'react-native-session-timeout': monorepoRoot,
     },
   },
 };

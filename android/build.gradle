@@ -5,7 +5,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:7.2.1'
+    classpath 'com.android.tools.build:gradle:8.7.3'
   }
 }
 
@@ -16,11 +16,12 @@ def safeExtGet(prop, fallback) {
 }
 
 android {
-  compileSdkVersion safeExtGet('compileSdkVersion', 33)
+  compileSdkVersion safeExtGet('compileSdkVersion', 35)
+  namespace "com.sessiontimeout"
 
   defaultConfig {
-    minSdkVersion safeExtGet('minSdkVersion', 21)
-    targetSdkVersion safeExtGet('targetSdkVersion', 33)
+    minSdkVersion safeExtGet('minSdkVersion', 24)
+    targetSdkVersion safeExtGet('targetSdkVersion', 35)
     versionCode 1
     versionName "1.0.0"
   }
@@ -31,13 +32,13 @@ android {
     }
   }
 
-  lintOptions {
+  lint {
     disable 'GradleCompatible'
   }
 
   compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
   }
 }
 
@@ -47,5 +48,5 @@ repositories {
 }
 
 dependencies {
-  implementation 'com.facebook.react:react-native:+'
+  implementation 'com.facebook.react:react-android'
 }

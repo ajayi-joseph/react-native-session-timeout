@@ -1,3 +1,10 @@
+/**
+ * Sample React Native App - Session Timeout Demo
+ * https://github.com/facebook/react-native
+ *
+ * @format
+ */
+
 import React from 'react';
 import {
   SafeAreaView,
@@ -62,7 +69,7 @@ function AppContent() {
         <View style={styles.header}>
           <Text style={styles.title}>Session Timeout Demo</Text>
           <Text style={styles.subtitle}>
-            Timeout: 2 minutes • Warning: 30 seconds
+            Timeout: 45 seconds • Warning: 20 seconds
           </Text>
         </View>
 
@@ -115,8 +122,8 @@ function AppContent() {
         <View style={styles.infoCard}>
           <Text style={styles.infoTitle}>How It Works:</Text>
           <Text style={styles.infoText}>
-            • Timer starts at 2 minutes{'\n'}
-            • Warning appears at 30 seconds{'\n'}
+            • Timer starts at 45 seconds{'\n'}
+            • Warning appears at 20 seconds{'\n'}
             • Session expires at 0 seconds{'\n'}
             • Any interaction resets the timer{'\n'}
             • Test by waiting or using controls above
@@ -140,8 +147,8 @@ export default function App() {
 
   return (
     <SessionTimeoutProvider
-      timeout={120000}
-      warningDuration={30000}
+      timeout={45000}
+      warningDuration={20000}
       onTimeout={handleTimeout}
       onWarning={handleWarning}
       pauseOnBackground={false}>
