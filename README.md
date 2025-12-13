@@ -2,6 +2,17 @@
 
 A comprehensive React Native library for handling user session timeouts with proper app lifecycle management, warning dialogs, and full Android 10+ compatibility.
 
+## Why This Library?
+
+This library **detects user inactivity** and manages session expiration for security and compliance needs.
+
+**Perfect for:**
+- 🏦 **Banking/Finance Apps** - Auto-logout after inactivity (PCI-DSS, SOC2)
+- 🏢 **Enterprise Apps** - Security policies requiring session timeouts
+- 🛒 **E-commerce** - Expire shopping carts/sessions
+- 🏥 **Healthcare Apps** - HIPAA compliance with automatic session termination
+- 🔐 **Any app requiring security-based session management**
+
 ## Features
 
 ✅ **Android 10+ Compatible** - No background timer issues  
