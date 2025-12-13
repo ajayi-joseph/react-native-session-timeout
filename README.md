@@ -223,6 +223,14 @@ This library is essential for apps that require automatic logout for security:
 - 💼 **Enterprise** - Corporate security policies (ISO 27001)
 - 🏛️ **Government** - Classified/sensitive information handling
 - 🔐 **Security-sensitive apps** - Auto-logout after inactivity
+- 
+
+
+## Demo
+
+
+https://github.com/user-attachments/assets/37d9b156-329b-44db-aecb-12ba814e4dcb
+
 
 ## License
 
