@@ -200,4 +200,14 @@ public class SessionTimeoutModule extends ReactContextBaseJavaModule implements 
         }
         reactContext.removeLifecycleEventListener(this);
     }
+
+    @ReactMethod
+    public void addListener(String eventName) {
+        // Required for RCT built-in Event Emitter Calls
+    }
+
+    @ReactMethod
+    public void removeListeners(Integer count) {
+        // Required for RCT built-in Event Emitter Calls
+    }
 }

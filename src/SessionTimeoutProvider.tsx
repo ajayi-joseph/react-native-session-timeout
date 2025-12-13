@@ -17,7 +17,10 @@ import { SessionTimeoutContext } from './SessionTimeoutContext';
 import NativeSessionTimeout from './NativeModule';
 import type { SessionTimeoutConfig } from './types';
 
-const eventEmitter = new NativeEventEmitter(NativeModules.SessionTimeoutModule);
+// Create event emitter with proper null check
+const eventEmitter = NativeModules.SessionTimeoutModule
+  ? new NativeEventEmitter(NativeModules.SessionTimeoutModule)
+  : null;
 
 export function SessionTimeoutProvider({
   children,

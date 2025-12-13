@@ -1,0 +1,6 @@
+rootProject.name = 'example'
+apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
+include ':react-native-session-timeout'
+project(':react-native-session-timeout').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-session-timeout/android')
+include ':app'
+includeBuild('../node_modules/@react-native/gradle-plugin')

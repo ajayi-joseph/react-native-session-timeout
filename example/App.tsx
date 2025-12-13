@@ -1,20 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
   Text,
   View,
-  Button,
   Modal,
   TouchableOpacity,
   ScrollView,
-  StatusBar,
+  Alert,
   Platform,
 } from 'react-native';
 import {
   SessionTimeoutProvider,
   useSessionTimeout,
-} from '../src';
+} from 'react-native-session-timeout';
 
 function WarningDialog() {
   const { isWarning, remainingTime, resetTimer } = useSessionTimeout();
@@ -42,119 +41,88 @@ function WarningDialog() {
 
 function AppContent() {
   const {
-    isWarning,
     remainingTime,
     resetTimer,
     pauseTimer,
     resumeTimer,
     isActive,
+    isWarning,
   } = useSessionTimeout();
 
-  const [eventLog, setEventLog] = useState<string[]>([]);
-
-  const addLog = (message: string) => {
-    const timestamp = new Date().toLocaleTimeString();
-    setEventLog((prev) => [`[${timestamp}] ${message}`, ...prev.slice(0, 9)]);
+  const formatTime = (ms: number) => {
+    const totalSeconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
-
-  React.useEffect(() => {
-    if (isWarning) {
-      addLog('⚠️ Warning: Session expiring soon!');
-    }
-  }, [isWarning]);
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.header}>
-          <Text style={styles.title}>React Native Session Timeout</Text>
-          <Text style={styles.subtitle}>Example App</Text>
+          <Text style={styles.title}>Session Timeout Demo</Text>
+          <Text style={styles.subtitle}>
+            Timeout: 2 minutes • Warning: 30 seconds
+          </Text>
         </View>
 
         <View style={styles.statusCard}>
-          <Text style={styles.statusLabel}>Session Status</Text>
           <View style={styles.statusRow}>
-            <View
-              style={[
-                styles.statusIndicator,
-                { backgroundColor: isActive ? '#4CAF50' : '#F44336' },
-              ]}
-            />
-            <Text style={styles.statusText}>
-              {isActive ? 'Active' : 'Inactive'}
-            </Text>
-          </View>
-          <Text style={styles.timerText}>
-            Time Remaining: {Math.floor(remainingTime / 1000)}s
-          </Text>
-          {isWarning && (
-            <View style={styles.warningBanner}>
-              <Text style={styles.warningText}>
-                ⚠️ Session expiring soon!
+            <Text style={styles.label}>Status:</Text>
+            <View style={styles.statusBadge}>
+              <View
+                style={[
+                  styles.statusDot,
+                  {
+                    backgroundColor: isActive
+                      ? isWarning
+                        ? '#FFA500'
+                        : '#10B981'
+                      : '#EF4444',
+                  },
+                ]}
+              />
+              <Text style={styles.statusText}>
+                {isActive ? (isWarning ? 'Warning' : 'Active') : 'Inactive'}
               </Text>
             </View>
-          )}
+          </View>
+
+          <View style={styles.statusRow}>
+            <Text style={styles.label}>Remaining Time:</Text>
+            <Text style={styles.timeValue}>{formatTime(remainingTime)}</Text>
+          </View>
+
+          <View style={styles.statusRow}>
+            <Text style={styles.label}>Warning Active:</Text>
+            <Text style={styles.value}>{isWarning ? 'Yes' : 'No'}</Text>
+          </View>
         </View>
 
         <View style={styles.controls}>
-          <Text style={styles.sectionTitle}>Controls</Text>
-          <View style={styles.buttonRow}>
-            <TouchableOpacity
-              style={[styles.controlButton, styles.primaryButton]}
-              onPress={() => {
-                resetTimer();
-                addLog('✅ Timer reset');
-              }}>
-              <Text style={styles.controlButtonText}>Reset Timer</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.controlButton, styles.secondaryButton]}
-              onPress={() => {
-                pauseTimer();
-                addLog('⏸️ Timer paused');
-              }}
-              disabled={!isActive}>
-              <Text style={styles.controlButtonText}>Pause</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.controlButton, styles.secondaryButton]}
-              onPress={() => {
-                resumeTimer();
-                addLog('▶️ Timer resumed');
-              }}
-              disabled={isActive}>
-              <Text style={styles.controlButtonText}>Resume</Text>
-            </TouchableOpacity>
-          </View>
+          <Text style={styles.controlsTitle}>Manual Controls</Text>
+          <TouchableOpacity style={styles.controlButton} onPress={resetTimer}>
+            <Text style={styles.controlButtonText}>🔄 Reset Timer</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.controlButton} onPress={pauseTimer}>
+            <Text style={styles.controlButtonText}>⏸️ Pause Timer</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.controlButton} onPress={resumeTimer}>
+            <Text style={styles.controlButtonText}>▶️ Resume Timer</Text>
+          </TouchableOpacity>
         </View>
 
-        <View style={styles.logContainer}>
-          <Text style={styles.sectionTitle}>Event Log</Text>
-          {eventLog.length === 0 ? (
-            <Text style={styles.emptyLog}>
-              Interact with the controls to see events
-            </Text>
-          ) : (
-            eventLog.map((log, index) => (
-              <Text key={index} style={styles.logEntry}>
-                {log}
-              </Text>
-            ))
-          )}
-        </View>
-
-        <View style={styles.infoBox}>
-          <Text style={styles.infoTitle}>ℹ️ How it works</Text>
+        <View style={styles.infoCard}>
+          <Text style={styles.infoTitle}>How It Works:</Text>
           <Text style={styles.infoText}>
-            • Session timeout: 2 minutes{'\n'}
-            • Warning appears: 30 seconds before timeout{'\n'}
-            • Touch anywhere to reset the timer{'\n'}
-            • App handles background/foreground automatically
+            • Timer starts at 2 minutes{'\n'}
+            • Warning appears at 30 seconds{'\n'}
+            • Session expires at 0 seconds{'\n'}
+            • Any interaction resets the timer{'\n'}
+            • Test by waiting or using controls above
           </Text>
         </View>
       </ScrollView>
-
       <WarningDialog />
     </SafeAreaView>
   );
@@ -162,7 +130,8 @@ function AppContent() {
 
 export default function App() {
   const handleTimeout = () => {
-    console.log('Session timed out! User should be logged out.');
+    Alert.alert('Session Expired', 'You have been logged out due to inactivity');
+    console.log('Session timed out!');
   };
 
   const handleWarning = (remainingTime: number) => {
@@ -171,8 +140,8 @@ export default function App() {
 
   return (
     <SessionTimeoutProvider
-      timeout={120000} // 2 minutes
-      warningDuration={30000} // 30 seconds warning
+      timeout={120000}
+      warningDuration={30000}
       onTimeout={handleTimeout}
       onWarning={handleWarning}
       pauseOnBackground={false}>
@@ -197,12 +166,11 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: '#333',
-    textAlign: 'center',
+    marginBottom: 8,
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#666',
-    marginTop: 5,
   },
   statusCard: {
     backgroundColor: 'white',
@@ -215,107 +183,90 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
-  statusLabel: {
-    fontSize: 12,
-    color: '#999',
-    textTransform: 'uppercase',
-    marginBottom: 10,
-  },
   statusRow: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 16,
   },
-  statusIndicator: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    marginRight: 8,
+  label: {
+    fontSize: 16,
+    color: '#666',
+    fontWeight: '500',
+  },
+  statusBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f0f0f0',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+  },
+  statusDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginRight: 6,
   },
   statusText: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: '600',
     color: '#333',
   },
-  timerText: {
+  timeValue: {
     fontSize: 32,
     fontWeight: 'bold',
     color: '#2196F3',
-    marginTop: 10,
+    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
   },
-  warningBanner: {
-    backgroundColor: '#FFF3CD',
-    padding: 10,
-    borderRadius: 8,
-    marginTop: 15,
-  },
-  warningText: {
-    color: '#856404',
+  value: {
+    fontSize: 16,
     fontWeight: '600',
-    textAlign: 'center',
+    color: '#333',
   },
   controls: {
+    backgroundColor: 'white',
+    borderRadius: 12,
+    padding: 20,
     marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
-  sectionTitle: {
+  controlsTitle: {
     fontSize: 18,
     fontWeight: '600',
     color: '#333',
-    marginBottom: 15,
-  },
-  buttonRow: {
-    gap: 10,
+    marginBottom: 12,
   },
   controlButton: {
-    padding: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  primaryButton: {
     backgroundColor: '#2196F3',
-  },
-  secondaryButton: {
-    backgroundColor: '#757575',
+    padding: 16,
+    borderRadius: 8,
+    marginBottom: 10,
+    alignItems: 'center',
   },
   controlButtonText: {
     color: 'white',
     fontSize: 16,
     fontWeight: '600',
   },
-  logContainer: {
-    backgroundColor: 'white',
+  infoCard: {
+    backgroundColor: '#FEF3C7',
     borderRadius: 12,
     padding: 20,
-    marginBottom: 20,
-    minHeight: 150,
-  },
-  emptyLog: {
-    color: '#999',
-    fontStyle: 'italic',
-    textAlign: 'center',
-  },
-  logEntry: {
-    fontSize: 12,
-    color: '#333',
-    marginBottom: 8,
-    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
-  },
-  infoBox: {
-    backgroundColor: '#E3F2FD',
-    borderRadius: 12,
-    padding: 20,
-    marginBottom: 20,
   },
   infoTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1976D2',
-    marginBottom: 10,
+    color: '#92400E',
+    marginBottom: 12,
   },
   infoText: {
     fontSize: 14,
-    color: '#1565C0',
+    color: '#92400E',
     lineHeight: 22,
   },
   overlay: {
