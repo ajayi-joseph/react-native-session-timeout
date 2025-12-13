@@ -9,11 +9,12 @@ import {
   TouchableOpacity,
   ScrollView,
   StatusBar,
+  Platform,
 } from 'react-native';
 import {
   SessionTimeoutProvider,
   useSessionTimeout,
-} from 'react-native-session-timeout';
+} from '../src';
 
 function WarningDialog() {
   const { isWarning, remainingTime, resetTimer } = useSessionTimeout();
