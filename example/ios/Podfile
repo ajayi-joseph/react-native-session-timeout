@@ -28,6 +28,9 @@ end
 target 'example' do
   config = use_native_modules!
 
+  # Manually link the library for local development
+  pod 'react-native-session-timeout', :path => '../node_modules/react-native-session-timeout'
+
   # Flags change depending on the env values.
   flags = get_default_flags()
 

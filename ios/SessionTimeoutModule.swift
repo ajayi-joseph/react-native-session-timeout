@@ -162,6 +162,16 @@ class SessionTimeoutModule: NSObject {
         }
     }
     
+    @objc
+    func addListener(_ eventName: String) {
+        // Required for RCT built-in Event Emitter Calls
+    }
+    
+    @objc
+    func removeListeners(_ count: Double) {
+        // Required for RCT built-in Event Emitter Calls
+    }
+    
     deinit {
         timer?.invalidate()
         timer = nil
