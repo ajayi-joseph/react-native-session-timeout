@@ -11,9 +11,9 @@ Pod::Spec.new do |s|
   s.authors      = package["author"]
 
   s.platforms    = { :ios => "11.0" }
-  s.source       = { :git => "https://github.com/yourusername/react-native-session-timeout.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/ajayi-joseph/react-native-session-timeout.git", :tag => "#{s.version}" }
 
-  s.source_files = "ios/**/*.{h,m,mm}"
+  s.source_files = "ios/**/*.{h,m,mm,swift}"
 
   s.dependency "React-Core"
 end
