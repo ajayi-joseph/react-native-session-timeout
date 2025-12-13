@@ -152,6 +152,143 @@ Returns an object with:
 
 ## How It Works
 
+### Complete Logout Flow
+
+The library provides a complete session timeout solution with three layers working together:
+
+#### 1. Native Timer (Android/iOS)
+Native modules maintain an accurate countdown timer that runs in the background:
+```java
+// Android: Handler-based timer
+remainingTime = timeoutDuration - (currentTime - lastResetTime);
+```
+
+```swift
+// iOS: Timer-based implementation
+timer = Timer.scheduledTimer(timeInterval: 1.0, ...)
+```
+
+**Why native?** JavaScript timers can be unreliable when the JS thread is busy with animations, state updates, or heavy computations.
+
+#### 2. Automatic State Synchronization
+The library automatically syncs with the native timer every second (this happens internally - you don't need to do anything):
+```tsx
+// Internal implementation - handled automatically by the library
+setInterval(() => {
+  const remaining = await NativeSessionTimeout.getRemainingTime();
+  
+  if (remaining <= warningDuration) {
+    onWarning?.(remaining); // Triggers your warning callback
+  }
+  
+  if (remaining <= 0) {
+    onTimeout(); // Triggers your logout callback
+  }
+}, 1000);
+```
+
+**You don't write this code** - the library does this automatically!
+
+#### 3. Your Logout Handler (This is all you need to implement!)
+Simply provide an `onTimeout` callback where you implement logout logic:
+
+```tsx
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+
+function App() {
+  const navigation = useNavigation();
+
+  const handleTimeout = async () => {
+    // 1. Clear authentication tokens
+    await AsyncStorage.removeItem('authToken');
+    await AsyncStorage.removeItem('refreshToken');
+    
+    // 2. Clear any cached user data
+    await AsyncStorage.removeItem('userData');
+    
+    // 3. Reset app state
+    // (use your state management solution: Redux, Zustand, etc.)
+    
+    // 4. Navigate to login screen
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Login' }],
+    });
+    
+    // 5. Show user-friendly message
+    Alert.alert(
+      'Session Expired',
+      'For your security, you have been logged out due to inactivity.',
+      [{ text: 'OK' }]
+    );
+  };
+
+  return (
+    <SessionTimeoutProvider
+      timeout={300000} // 5 minutes
+      warningDuration={60000} // 1 minute warning
+      onTimeout={handleTimeout}
+    >
+      <YourApp />
+    </SessionTimeoutProvider>
+  );
+}
+```
+
+### Real-World Example: Banking App
+
+```tsx
+import React, { useState } from 'react';
+import { Alert } from 'react-native';
+import { SessionTimeoutProvider } from 'react-native-session-timeout';
+
+function BankingApp() {
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+
+  const handleTimeout = async () => {
+    // Security-critical cleanup
+    await secureStorage.clearAll();
+    
+    // Update UI
+    setIsLoggedIn(false);
+    
+    // Log for security audit
+    console.log('[Security] User session expired at:', new Date().toISOString());
+    
+    // Navigate to login
+    navigation.navigate('Login');
+    
+    Alert.alert(
+      'Session Expired',
+      'You have been logged out due to inactivity',
+      [{ text: 'Login Again', onPress: () => navigation.navigate('Login') }]
+    );
+  };
+
+  const handleWarning = (remainingTime: number) => {
+    // Optional: Log warning for analytics
+    console.log(`Warning: ${Math.floor(remainingTime / 1000)}s remaining`);
+  };
+
+  if (!isLoggedIn) {
+    return <LoginScreen />;
+  }
+
+  return (
+    <SessionTimeoutProvider
+      timeout={120000} // 2 minutes (banking apps use short timeouts)
+      warningDuration={30000} // 30 second warning
+      onTimeout={handleTimeout}
+      onWarning={handleWarning}
+      pauseOnBackground={true} // Pause when app backgrounds (security feature)
+    >
+      <BankingDashboard />
+    </SessionTimeoutProvider>
+  );
+}
+```
+
 ### Lifecycle Management
 
 The library automatically handles app lifecycle transitions:
@@ -174,7 +311,25 @@ The library uses native modules to:
 - Handle app lifecycle events reliably
 - Avoid Android 10+ background restrictions
 
-## Differences from react-native-user-inactivity
+## Differences from Similar Libraries
+
+### vs. react-native-idle-timer
+
+| Feature | react-native-idle-timer | react-native-session-timeout |
+|---------|------------------------|------------------------------|
+| **Purpose** | Prevent screen from sleeping | Automatically logout users |
+| **Use Case** | Video players, navigation apps | Banking, healthcare, secure apps |
+| **Security** | Not security-related | Security/compliance requirement |
+| **Action** | Keeps screen ON | Logs user OUT |
+| **Compliance** | N/A | HIPAA, PCI-DSS, SOC 2 |
+| **Warning System** | No warnings | Countdown warnings |
+| **Example** | Netflix keeping screen on | Bank app auto-logout |
+
+**They solve opposite problems:**
+- `react-native-idle-timer`: "Don't let my screen turn off during this video" 🎥
+- `react-native-session-timeout`: "Automatically log me out if I'm not using the app" 🔒
+
+### vs. react-native-user-inactivity
 
 | Feature | react-native-user-inactivity | react-native-session-timeout |
 |---------|------------------------------|------------------------------|
@@ -184,6 +339,22 @@ The library uses native modules to:
 | Warning Dialogs | ❌ Manual | ✅ Built-in |
 | Background Timer | ⚠️ External dependency | ✅ Native implementation |
 | TypeScript | ⚠️ Basic | ✅ Full support |
+
+## Use Cases
+
+This library is essential for apps that:
+
+- 🏦 **Banking & Finance** - Required by PCI-DSS compliance
+- 🏥 **Healthcare** - HIPAA compliance for patient data protection
+- 💼 **Enterprise** - Corporate security policies (ISO 27001)
+- 🏛️ **Government** - Apps handling classified/sensitive information
+- 🔐 **Any app with sensitive data** - Security best practice
+
+Real-world examples:
+- Chase Bank app logs out after 5 minutes
+- Epic MyChart (healthcare) logs out after 10 minutes  
+- Workday (HR/Payroll) logs out after 15 minutes
+- Government portals auto-logout for security
 
 ## License
 
