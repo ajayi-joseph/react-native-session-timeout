@@ -227,9 +227,8 @@ This library is essential for apps that require automatic logout for security:
 
 
 ## Demo
+![Simulator Screen Recording - iPhone 15 Pro - 2025-12-13 at 23 45 30](https://github.com/user-attachments/assets/2fa81613-7457-4f06-8fd2-8bf60faf1c6a)
 
-
-https://github.com/user-attachments/assets/37d9b156-329b-44db-aecb-12ba814e4dcb
 
 
 ## License
