@@ -1,4 +1,8 @@
 # Changelog
+## [0.1.2] - 2025-12-15
+
+### Fixed
+- Fully removed all references to the `events` prop from the codebase and tests
 
 All notable changes to this project will be documented in this file.
 
