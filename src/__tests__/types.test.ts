@@ -25,13 +25,11 @@ describe('Type definitions', () => {
       onWarning: (time) => {},
       enabled: true,
       pauseOnBackground: true,
-      events: ['touch', 'scroll'],
     };
 
     expect(config.warningDuration).toBe(60000);
     expect(config.enabled).toBe(true);
     expect(config.pauseOnBackground).toBe(true);
-    expect(config.events).toEqual(['touch', 'scroll']);
   });
 
   it('should have correct SessionTimeoutState structure', () => {
