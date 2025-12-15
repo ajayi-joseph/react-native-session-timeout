@@ -179,10 +179,6 @@ export function SessionTimeoutProvider({
         resetTimer();
         return false;
       },
-      onMoveShouldSetPanResponder: () => {
-        resetTimer();
-        return false;
-      },
     })
   ).current;
 

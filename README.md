@@ -134,6 +134,8 @@ function App() {
 }
 ```
 
+**Note:** All user interactions (taps, scrolls, swipes, gestures) automatically reset the timer. This ensures that any activity keeps the session alive.
+
 ## API
 
 ### SessionTimeoutProvider Props
@@ -146,7 +148,6 @@ function App() {
 | `onWarning` | `(remainingTime: number) => void` | No | Callback when warning period starts |
 | `enabled` | `boolean` | No | Enable/disable the timeout (default: true) |
 | `pauseOnBackground` | `boolean` | No | Pause timer when app goes to background (default: false) |
-| `events` | `string[]` | No | Custom events to track for activity (default: touch events) |
 
 ### useSessionTimeout Hook
 

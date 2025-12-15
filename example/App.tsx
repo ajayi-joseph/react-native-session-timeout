@@ -125,8 +125,14 @@ function AppContent() {
             • Timer starts at 20 seconds{'\n'}
             • Warning appears at 10 seconds{'\n'}
             • Session expires at 0 seconds{'\n'}
-            • Any interaction resets the timer{'\n'}
+            • Any interaction resets the timer{`\n`}
             • Test by waiting or using controls above
+          </Text>
+        </View>
+
+        <View style={styles.footer}>
+          <Text style={styles.footerText}>
+            👆 Tap anywhere or use controls to interact
           </Text>
         </View>
       </ScrollView>
@@ -275,6 +281,22 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#92400E',
     lineHeight: 22,
+  },
+  featureText: {
+    fontSize: 13,
+    color: '#78350F',
+    fontWeight: '600',
+    fontStyle: 'italic',
+  },
+  footer: {
+    marginTop: 30,
+    marginBottom: 20,
+    alignItems: 'center',
+  },
+  footerText: {
+    fontSize: 14,
+    color: '#64748B',
+    fontWeight: '500',
   },
   overlay: {
     flex: 1,

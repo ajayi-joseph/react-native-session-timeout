@@ -5,7 +5,6 @@ export interface SessionTimeoutConfig {
   onWarning?: (remainingTime: number) => void;
   enabled?: boolean;
   pauseOnBackground?: boolean;
-  events?: string[];
 }
 
 export interface SessionTimeoutState {
