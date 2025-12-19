@@ -12,6 +12,10 @@ import {
   View,
   StyleSheet,
 } from 'react-native';
+// Style for root View
+const styles = StyleSheet.create({
+  flex1: { flex: 1 },
+});
 import { SessionTimeoutContext } from './SessionTimeoutContext';
 import NativeSessionTimeout from './NativeModule';
 import type { SessionTimeoutConfig } from './types';
@@ -190,9 +194,7 @@ export function SessionTimeoutProvider({
     resumeTimer,
   };
 
-  const styles = StyleSheet.create({
-    flex1: { flex: 1 },
-  });
+
 
   return (
     <SessionTimeoutContext.Provider value={contextValue}>
