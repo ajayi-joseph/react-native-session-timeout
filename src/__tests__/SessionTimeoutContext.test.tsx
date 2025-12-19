@@ -25,11 +25,15 @@ describe('useSessionTimeout', () => {
 
   it('should throw error when used outside provider', () => {
     // Suppress console.error for this test
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleSpy = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
 
     expect(() => {
       renderHook(() => useSessionTimeout());
-    }).toThrow('useSessionTimeout must be used within a SessionTimeoutProvider');
+    }).toThrow(
+      'useSessionTimeout must be used within a SessionTimeoutProvider'
+    );
 
     consoleSpy.mockRestore();
   });

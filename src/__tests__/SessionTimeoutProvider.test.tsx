@@ -33,7 +33,9 @@ describe('SessionTimeoutProvider', () => {
     jest.useFakeTimers();
     mockOnTimeout = jest.fn();
     mockOnWarning = jest.fn();
-    (NativeSessionTimeout.getRemainingTime as jest.Mock).mockResolvedValue(300000);
+    (NativeSessionTimeout.getRemainingTime as jest.Mock).mockResolvedValue(
+      300000
+    );
   });
 
   afterEach(() => {
@@ -50,7 +52,11 @@ describe('SessionTimeoutProvider', () => {
 
   it('should start timer on mount when enabled', async () => {
     render(
-      <SessionTimeoutProvider timeout={300000} onTimeout={mockOnTimeout} enabled>
+      <SessionTimeoutProvider
+        timeout={300000}
+        onTimeout={mockOnTimeout}
+        enabled
+      >
         <TestComponent />
       </SessionTimeoutProvider>
     );
@@ -62,7 +68,11 @@ describe('SessionTimeoutProvider', () => {
 
   it('should not start timer when disabled', async () => {
     render(
-      <SessionTimeoutProvider timeout={300000} onTimeout={mockOnTimeout} enabled={false}>
+      <SessionTimeoutProvider
+        timeout={300000}
+        onTimeout={mockOnTimeout}
+        enabled={false}
+      >
         <TestComponent />
       </SessionTimeoutProvider>
     );
@@ -74,7 +84,9 @@ describe('SessionTimeoutProvider', () => {
 
   it('should trigger warning callback when warning duration is reached', async () => {
     const warningDuration = 60000;
-    (NativeSessionTimeout.getRemainingTime as jest.Mock).mockResolvedValue(50000);
+    (NativeSessionTimeout.getRemainingTime as jest.Mock).mockResolvedValue(
+      50000
+    );
 
     render(
       <SessionTimeoutProvider
@@ -281,7 +293,9 @@ describe('SessionTimeoutProvider', () => {
   });
 
   it('should not trigger warning multiple times', async () => {
-    (NativeSessionTimeout.getRemainingTime as jest.Mock).mockResolvedValue(50000);
+    (NativeSessionTimeout.getRemainingTime as jest.Mock).mockResolvedValue(
+      50000
+    );
 
     render(
       <SessionTimeoutProvider
@@ -344,4 +358,3 @@ describe('SessionTimeoutProvider', () => {
     });
   });
 });
-

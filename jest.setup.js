@@ -66,20 +66,20 @@ const mockSessionTimeoutModule = {
 // Mock react-native with PanResponder
 jest.mock('react-native', () => {
   const RN = jest.requireActual('react-native');
-  
+
   // Set up NativeModules
   if (!RN.NativeModules) {
     RN.NativeModules = {};
   }
   RN.NativeModules.SessionTimeoutModule = mockSessionTimeoutModule;
-  
+
   // Set up AppState
   const AppStateMock = require('react-native/Libraries/AppState/AppState');
   Object.defineProperty(RN, 'AppState', {
     get: () => AppStateMock,
     configurable: true,
   });
-  
+
   // Set up PanResponder
   Object.defineProperty(RN, 'PanResponder', {
     value: {
@@ -89,7 +89,7 @@ jest.mock('react-native', () => {
     },
     configurable: true,
   });
-  
+
   return RN;
 });
 

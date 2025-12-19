@@ -122,11 +122,9 @@ function AppContent() {
         <View style={styles.infoCard}>
           <Text style={styles.infoTitle}>How It Works:</Text>
           <Text style={styles.infoText}>
-            • Timer starts at 20 seconds{'\n'}
-            • Warning appears at 10 seconds{'\n'}
-            • Session expires at 0 seconds{'\n'}
-            • Any interaction resets the timer{`\n`}
-            • Test by waiting or using controls above
+            • Timer starts at 20 seconds{'\n'}• Warning appears at 10 seconds
+            {'\n'}• Session expires at 0 seconds{'\n'}• Any interaction resets
+            the timer{'\n'}• Test by waiting or using controls above
           </Text>
         </View>
 
@@ -143,7 +141,10 @@ function AppContent() {
 
 export default function App() {
   const handleTimeout = () => {
-    Alert.alert('Session Expired', 'You have been logged out due to inactivity');
+    Alert.alert(
+      'Session Expired',
+      'You have been logged out due to inactivity',
+    );
     console.log('Session timed out!');
   };
 
@@ -157,7 +158,8 @@ export default function App() {
       warningDuration={10000}
       onTimeout={handleTimeout}
       onWarning={handleWarning}
-      pauseOnBackground={false}>
+      pauseOnBackground={false}
+    >
       <AppContent />
     </SessionTimeoutProvider>
   );

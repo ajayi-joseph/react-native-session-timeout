@@ -17,11 +17,11 @@ const config = {
     // Block parent node_modules to avoid duplicate React instances
     blockList: [
       new RegExp(`${path.resolve(monorepoRoot, 'node_modules')}/react/.*`),
-      new RegExp(`${path.resolve(monorepoRoot, 'node_modules')}/react-native/.*`),
+      new RegExp(
+        `${path.resolve(monorepoRoot, 'node_modules')}/react-native/.*`,
+      ),
     ],
-    nodeModulesPaths: [
-      path.resolve(projectRoot, 'node_modules'),
-    ],
+    nodeModulesPaths: [path.resolve(projectRoot, 'node_modules')],
     extraNodeModules: {
       'react-native-session-timeout': monorepoRoot,
     },

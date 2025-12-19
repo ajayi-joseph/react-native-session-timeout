@@ -34,7 +34,7 @@ export function SessionTimeoutProvider({
   const [isWarning, setIsWarning] = useState(false);
   const [remainingTime, setRemainingTime] = useState(timeout);
   const [isActive, setIsActive] = useState(enabled);
-  
+
   const warningTriggeredRef = useRef(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const appStateRef = useRef(AppState.currentState);
@@ -129,27 +129,30 @@ export function SessionTimeoutProvider({
 
   // Handle app state changes
   useEffect(() => {
-    const subscription = AppState.addEventListener('change', async (nextAppState: AppStateStatus) => {
-      if (
-        appStateRef.current.match(/inactive|background/) &&
-        nextAppState === 'active'
-      ) {
-        // App has come to foreground
-        if (pauseOnBackground) {
-          await resumeTimer();
+    const subscription = AppState.addEventListener(
+      'change',
+      async (nextAppState: AppStateStatus) => {
+        if (
+          appStateRef.current.match(/inactive|background/) &&
+          nextAppState === 'active'
+        ) {
+          // App has come to foreground
+          if (pauseOnBackground) {
+            await resumeTimer();
+          }
+        } else if (
+          appStateRef.current === 'active' &&
+          nextAppState.match(/inactive|background/)
+        ) {
+          // App has gone to background
+          if (pauseOnBackground) {
+            await pauseTimer();
+          }
         }
-      } else if (
-        appStateRef.current === 'active' &&
-        nextAppState.match(/inactive|background/)
-      ) {
-        // App has gone to background
-        if (pauseOnBackground) {
-          await pauseTimer();
-        }
-      }
 
-      appStateRef.current = nextAppState;
-    });
+        appStateRef.current = nextAppState;
+      }
+    );
 
     return () => {
       subscription.remove();

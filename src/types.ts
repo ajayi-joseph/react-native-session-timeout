@@ -19,4 +19,5 @@ export interface SessionTimeoutControls {
   resumeTimer: () => void;
 }
 
-export type SessionTimeoutContextValue = SessionTimeoutState & SessionTimeoutControls;
+export type SessionTimeoutContextValue = SessionTimeoutState &
+  SessionTimeoutControls;
