@@ -1,5 +1,21 @@
 # react-native-session-timeout
 
+<!-- Badges -->
+<p align="left">
+  <a href="https://www.npmjs.com/package/react-native-session-timeout">
+    <img src="https://img.shields.io/npm/v/react-native-session-timeout.svg?style=flat-square" alt="npm version" />
+  </a>
+  <a href="https://www.npmjs.com/package/react-native-session-timeout">
+    <img src="https://img.shields.io/npm/dm/react-native-session-timeout.svg?style=flat-square" alt="npm downloads" />
+  </a>
+  <a href="https://github.com/ajayi-joseph/react-native-session-timeout/blob/main/LICENSE">
+    <img src="https://img.shields.io/npm/l/react-native-session-timeout.svg?style=flat-square" alt="license" />
+  </a>
+  <a href="https://github.com/ajayi-joseph/react-native-session-timeout/actions/workflows/ci.yml">
+    <img src="https://github.com/ajayi-joseph/react-native-session-timeout/actions/workflows/ci.yml/badge.svg" alt="build status" />
+  </a>
+</p>
+
 A comprehensive React Native library for **inactivity detection** and **idle app monitoring** with automatic session timeout management, customizable warning UI support, and full Android 10+ compatibility.
 
 ## Why This Library?
