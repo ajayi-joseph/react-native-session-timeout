@@ -23,6 +23,7 @@ A comprehensive React Native library for **inactivity detection** and **idle app
 This library **detects user inactivity** and manages session expiration for security and compliance needs.
 
 **Perfect for:**
+
 - 🏦 **Banking/Finance Apps** - Auto-logout after inactivity (PCI-DSS, SOC2)
 - 🏢 **Enterprise Apps** - Security policies requiring session timeouts
 - 🛒 **E-commerce** - Expire shopping carts/sessions
@@ -61,7 +62,10 @@ cd ios && pod install
 ```tsx
 import React from 'react';
 import { View, Text } from 'react-native';
-import { SessionTimeoutProvider, useSessionTimeout } from 'react-native-session-timeout';
+import {
+  SessionTimeoutProvider,
+  useSessionTimeout,
+} from 'react-native-session-timeout';
 
 function App() {
   return (
@@ -88,13 +92,8 @@ function App() {
 import { useSessionTimeout } from 'react-native-session-timeout';
 
 function YourComponent() {
-  const {
-    isWarning,
-    remainingTime,
-    resetTimer,
-    pauseTimer,
-    resumeTimer,
-  } = useSessionTimeout();
+  const { isWarning, remainingTime, resetTimer, pauseTimer, resumeTimer } =
+    useSessionTimeout();
 
   return (
     <View>
@@ -117,7 +116,10 @@ function YourComponent() {
 ```tsx
 import React from 'react';
 import { Modal, View, Text, Button } from 'react-native';
-import { SessionTimeoutProvider, useSessionTimeout } from 'react-native-session-timeout';
+import {
+  SessionTimeoutProvider,
+  useSessionTimeout,
+} from 'react-native-session-timeout';
 
 function CustomWarningDialog() {
   const { isWarning, remainingTime, resetTimer } = useSessionTimeout();
@@ -128,7 +130,8 @@ function CustomWarningDialog() {
         <View style={styles.dialog}>
           <Text style={styles.title}>Session Expiring</Text>
           <Text style={styles.message}>
-            Your session will expire in {Math.floor(remainingTime / 1000)} seconds
+            Your session will expire in {Math.floor(remainingTime / 1000)}{' '}
+            seconds
           </Text>
           <Button title="Continue Session" onPress={resetTimer} />
         </View>
@@ -163,6 +166,7 @@ The library **automatically detects user activity** and resets the timer on any 
 **How it works:** The library wraps your app with a `PanResponder` that detects all touch events. When the user interacts with the app, the inactivity timer automatically resets, keeping the session alive. If the user is idle (no interaction) for the configured `timeout` duration, the `onTimeout` callback is triggered.
 
 **Example Use Case:**
+
 ```tsx
 // Logout user after 5 minutes of inactivity
 <SessionTimeoutProvider
@@ -180,27 +184,27 @@ The library **automatically detects user activity** and resets the timer on any 
 
 ### SessionTimeoutProvider Props
 
-| Prop | Type | Required | Description |
-|------|------|----------|-------------|
-| `timeout` | `number` | Yes | Total timeout duration in milliseconds |
-| `warningDuration` | `number` | No | Show warning this many milliseconds before timeout (default: 60000) |
-| `onTimeout` | `() => void` | Yes | Callback when session times out |
-| `onWarning` | `(remainingTime: number) => void` | No | Callback when warning period starts |
-| `enabled` | `boolean` | No | Enable/disable the timeout (default: true) |
-| `pauseOnBackground` | `boolean` | No | Pause timer when app goes to background (default: false) |
+| Prop                | Type                              | Required | Description                                                         |
+| ------------------- | --------------------------------- | -------- | ------------------------------------------------------------------- |
+| `timeout`           | `number`                          | Yes      | Total timeout duration in milliseconds                              |
+| `warningDuration`   | `number`                          | No       | Show warning this many milliseconds before timeout (default: 60000) |
+| `onTimeout`         | `() => void`                      | Yes      | Callback when session times out                                     |
+| `onWarning`         | `(remainingTime: number) => void` | No       | Callback when warning period starts                                 |
+| `enabled`           | `boolean`                         | No       | Enable/disable the timeout (default: true)                          |
+| `pauseOnBackground` | `boolean`                         | No       | Pause timer when app goes to background (default: false)            |
 
 ### useSessionTimeout Hook
 
 Returns an object with:
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `isWarning` | `boolean` | Whether in warning period |
-| `remainingTime` | `number` | Milliseconds remaining until timeout |
-| `resetTimer` | `() => void` | Reset the session timer |
-| `pauseTimer` | `() => void` | Pause the timer |
-| `resumeTimer` | `() => void` | Resume the timer |
-| `isActive` | `boolean` | Whether timer is currently active |
+| Property        | Type         | Description                          |
+| --------------- | ------------ | ------------------------------------ |
+| `isWarning`     | `boolean`    | Whether in warning period            |
+| `remainingTime` | `number`     | Milliseconds remaining until timeout |
+| `resetTimer`    | `() => void` | Reset the session timer              |
+| `pauseTimer`    | `() => void` | Pause the timer                      |
+| `resumeTimer`   | `() => void` | Resume the timer                     |
+| `isActive`      | `boolean`    | Whether timer is currently active    |
 
 ## How It Works
 
@@ -219,19 +223,19 @@ function App() {
       const token = await AsyncStorage.getItem('authToken');
       await fetch('https://api.example.com/logout', {
         method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
     } catch (error) {
       console.error('Logout API error:', error);
       // Continue with local cleanup even if API fails
     }
-    
+
     // 2. Clear local storage
     await AsyncStorage.removeItem('authToken');
-    
+
     // 3. Navigate to login
     navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
-    
+
     // 4. Notify user
     Alert.alert('Session Expired', 'Please log in again');
   };
@@ -264,13 +268,11 @@ This library is essential for apps that require automatic logout for security:
 - 💼 **Enterprise** - Corporate security policies (ISO 27001)
 - 🏛️ **Government** - Classified/sensitive information handling
 - 🔐 **Security-sensitive apps** - Auto-logout after inactivity
-- 
-
+-
 
 ## Demo
+
 ![Simulator Screen Recording - iPhone 15 Pro - 2025-12-13 at 23 45 30](https://github.com/user-attachments/assets/2fa81613-7457-4f06-8fd2-8bf60faf1c6a)
-
-
 
 ## License
 

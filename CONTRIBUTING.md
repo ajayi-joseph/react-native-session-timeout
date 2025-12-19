@@ -33,6 +33,7 @@ Thank you for your interest in contributing! We welcome contributions from the c
 ## Reporting Issues
 
 When reporting issues, please include:
+
 - Device and OS version
 - React Native version
 - Steps to reproduce

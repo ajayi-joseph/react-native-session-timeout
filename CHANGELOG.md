@@ -1,7 +1,9 @@
 # Changelog
+
 ## [0.1.2] - 2025-12-15
 
 ### Fixed
+
 - Fully removed all references to the `events` prop from the codebase and tests
 
 All notable changes to this project will be documented in this file.
@@ -9,10 +11,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-
 ## [0.1.1] - 2025-12-15
 
 ### Changed
+
 - Removed unused `events` and `debounceDelay` props from API
 - Simplified provider and example app (all user interactions reset timer)
 - Updated documentation for clarity and accuracy
@@ -20,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2025-12-13
 
 ### Added
+
 - Initial release
 - Session timeout functionality with configurable duration
 - Built-in warning dialog support with countdown
@@ -35,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Zero native linking required (autolinking support)
 
 ### Features
+
 - No external dependencies for background timers
 - Accurate timekeeping using native modules
 - Proper Android Handler and iOS Timer implementations

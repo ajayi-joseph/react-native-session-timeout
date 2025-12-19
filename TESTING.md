@@ -9,6 +9,7 @@ The tests are organized into three main test suites:
 ### 1. **SessionTimeoutProvider Tests** (`src/__tests__/SessionTimeoutProvider.test.tsx`)
 
 Comprehensive tests for the main provider component covering:
+
 - Component rendering and initialization
 - Timer lifecycle (start, stop, reset, pause, resume)
 - Warning triggers and timeout callbacks
@@ -20,6 +21,7 @@ Comprehensive tests for the main provider component covering:
 ### 2. **Context Hook Tests** (`src/__tests__/SessionTimeoutContext.test.tsx`)
 
 Tests for the `useSessionTimeout` hook:
+
 - Error handling when used outside provider
 - Context value accessibility
 - Initial state verification
@@ -28,8 +30,9 @@ Tests for the `useSessionTimeout` hook:
 ### 3. **TypeScript Type Tests** (`src/__tests__/types.test.ts`)
 
 Validates TypeScript type definitions:
+
 - `SessionTimeoutConfig` interface
-- `SessionTimeoutState` interface  
+- `SessionTimeoutState` interface
 - `SessionTimeoutControls` interface
 - `SessionTimeoutContextValue` type
 
@@ -52,11 +55,13 @@ npm test -- --watch
 ## Test Configuration
 
 The project uses:
+
 - **Jest** - Testing framework
 - **@testing-library/react-native** - React Native testing utilities
 - **react-test-renderer** - React component testing
 
 Configuration files:
+
 - `jest.setup.js` - Global test setup and mocks
 - `babel.config.js` - Babel configuration for JSX/TypeScript
 - `package.json` - Jest configuration and scripts
@@ -64,6 +69,7 @@ Configuration files:
 ## Mocking Strategy
 
 The tests mock the following:
+
 - Native modules (`SessionTimeoutModule`)
 - Native event emitters
 - Platform constants
@@ -73,6 +79,7 @@ The tests mock the following:
 ## Coverage Goals
 
 The library aims for high test coverage:
+
 - **Statements**: >80%
 - **Branches**: >75%
 - **Functions**: >80%
@@ -83,7 +90,7 @@ The library aims for high test coverage:
 When adding new features:
 
 1. Add unit tests for the feature
-2. Test edge cases and error handling  
+2. Test edge cases and error handling
 3. Verify TypeScript types if applicable
 4. Update this guide if adding new test patterns
 
@@ -149,8 +156,9 @@ npm test -- --verbose
 ## Continuous Integration
 
 Tests should run automatically on:
+
 - Pull requests
-- Pre-commit hooks  
+- Pre-commit hooks
 - CI/CD pipeline builds
 
 Ensure all tests pass before merging code.

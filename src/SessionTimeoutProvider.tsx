@@ -5,7 +5,13 @@ import React, {
   useRef,
   PropsWithChildren,
 } from 'react';
-import { AppState, AppStateStatus, PanResponder, View, StyleSheet } from 'react-native';
+import {
+  AppState,
+  AppStateStatus,
+  PanResponder,
+  View,
+  StyleSheet,
+} from 'react-native';
 import { SessionTimeoutContext } from './SessionTimeoutContext';
 import NativeSessionTimeout from './NativeModule';
 import type { SessionTimeoutConfig } from './types';
