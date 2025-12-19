@@ -3,7 +3,7 @@ import { FlatCompat } from '@eslint/eslintrc';
 const compat = new FlatCompat();
 
 export default [
-  ...compat.extends('@react-native'),
+  ...compat.extends('plugin:@react-native-community/recommended'),
   {
     files: ['**/*.{js,ts,tsx}'],
     languageOptions: {
