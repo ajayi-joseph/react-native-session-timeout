@@ -77,19 +77,19 @@ function AppContent() {
           <View style={styles.statusRow}>
             <Text style={styles.label}>Status:</Text>
             <View style={styles.statusBadge}>
-                <View
-                  style={[
-                    styles.statusDot,
-                    styles.statusBanner,
-                    {
-                      backgroundColor: isActive
-                        ? isWarning
-                          ? '#FFA500'
-                          : '#10B981'
-                        : '#EF4444',
-                    },
-                  ]}
-                />
+              <View
+                style={[
+                  styles.statusDot,
+                  styles.statusBanner,
+                  {
+                    backgroundColor: isActive
+                      ? isWarning
+                        ? '#FFA500'
+                        : '#10B981'
+                      : '#EF4444',
+                  },
+                ]}
+              />
               <Text style={styles.statusText}>
                 {isActive ? (isWarning ? 'Warning' : 'Active') : 'Inactive'}
               </Text>
