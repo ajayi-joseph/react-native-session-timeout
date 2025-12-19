@@ -1,3 +1,4 @@
+/* eslint-env jest */
 // This file runs before the react-native preset loads
 // Mock PanResponder before it's required by any component
 

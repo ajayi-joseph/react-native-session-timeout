@@ -77,18 +77,19 @@ function AppContent() {
           <View style={styles.statusRow}>
             <Text style={styles.label}>Status:</Text>
             <View style={styles.statusBadge}>
-              <View
-                style={[
-                  styles.statusDot,
-                  {
-                    backgroundColor: isActive
-                      ? isWarning
-                        ? '#FFA500'
-                        : '#10B981'
-                      : '#EF4444',
-                  },
-                ]}
-              />
+                <View
+                  style={[
+                    styles.statusDot,
+                    styles.statusBanner,
+                    {
+                      backgroundColor: isActive
+                        ? isWarning
+                          ? '#FFA500'
+                          : '#10B981'
+                        : '#EF4444',
+                    },
+                  ]}
+                />
               <Text style={styles.statusText}>
                 {isActive ? (isWarning ? 'Warning' : 'Active') : 'Inactive'}
               </Text>
@@ -222,6 +223,11 @@ const styles = StyleSheet.create({
     height: 10,
     borderRadius: 5,
     marginRight: 6,
+  },
+  statusBanner: {
+    // small wrapper around the dot to provide spacing or background if needed
+    padding: 2,
+    borderRadius: 8,
   },
   statusText: {
     fontSize: 14,

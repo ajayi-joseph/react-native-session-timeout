@@ -22,7 +22,7 @@ describe('Type definitions', () => {
       timeout: 300000,
       warningDuration: 60000,
       onTimeout: () => {},
-      onWarning: (time) => {},
+      onWarning: () => {},
       enabled: true,
       pauseOnBackground: true,
     };

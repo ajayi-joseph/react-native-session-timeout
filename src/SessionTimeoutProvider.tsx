@@ -5,22 +5,12 @@ import React, {
   useRef,
   PropsWithChildren,
 } from 'react';
-import {
-  AppState,
-  AppStateStatus,
-  NativeEventEmitter,
-  NativeModules,
-  PanResponder,
-  View,
-} from 'react-native';
+import { AppState, AppStateStatus, PanResponder, View } from 'react-native';
 import { SessionTimeoutContext } from './SessionTimeoutContext';
 import NativeSessionTimeout from './NativeModule';
 import type { SessionTimeoutConfig } from './types';
 
 // Create event emitter with proper null check
-const eventEmitter = NativeModules.SessionTimeoutModule
-  ? new NativeEventEmitter(NativeModules.SessionTimeoutModule)
-  : null;
 
 export function SessionTimeoutProvider({
   children,

@@ -20,7 +20,6 @@ jest.mock('../NativeModule', () => ({
 
 // Test component to access context
 const TestComponent = () => {
-  const context = useSessionTimeout();
   return null;
 };
 
@@ -43,7 +42,7 @@ describe('SessionTimeoutProvider', () => {
   });
 
   it('should render children correctly', () => {
-    const { getByTestId } = render(
+    render(
       <SessionTimeoutProvider timeout={300000} onTimeout={mockOnTimeout}>
         <TestComponent />
       </SessionTimeoutProvider>
@@ -127,7 +126,6 @@ describe('SessionTimeoutProvider', () => {
   });
 
   it('should pause timer when app goes to background if pauseOnBackground is true', async () => {
-    const mockAppStateListener = jest.fn();
     const addEventListenerSpy = jest.spyOn(AppState, 'addEventListener');
 
     render(
@@ -267,9 +265,7 @@ describe('SessionTimeoutProvider', () => {
   });
 
   it('should update remaining time periodically', async () => {
-    let contextValue: any;
     const TestComponentWithContext = () => {
-      contextValue = useSessionTimeout();
       return null;
     };
 
