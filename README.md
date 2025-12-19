@@ -1,6 +1,6 @@
 # react-native-session-timeout
 
-A comprehensive React Native library for handling user session timeouts with proper app lifecycle management, warning dialogs, and full Android 10+ compatibility.
+A comprehensive React Native library for **inactivity detection** and **idle app monitoring** with automatic session timeout management, customizable warning UI support, and full Android 10+ compatibility.
 
 ## Why This Library?
 
@@ -15,6 +15,7 @@ This library **detects user inactivity** and manages session expiration for secu
 
 ## Features
 
+✅ **Inactivity & Idle Detection** - Automatically tracks user activity (taps, scrolls, swipes, gestures)  
 ✅ **Android 10+ Compatible** - No background timer issues  
 ✅ **Automatic Lifecycle Handling** - Properly handles app background/foreground transitions  
 ✅ **Built-in Warning Dialogs** - Countdown timer with customizable warning UI  
@@ -134,7 +135,30 @@ function App() {
 }
 ```
 
-**Note:** All user interactions (taps, scrolls, swipes, gestures) automatically reset the timer. This ensures that any activity keeps the session alive.
+## Inactivity Detection
+
+The library **automatically detects user activity** and resets the timer on any interaction:
+
+- ✅ **Taps** - Any touch on the screen
+- ✅ **Scrolls** - ScrollView, FlatList, etc.
+- ✅ **Swipes** - Gesture-based navigation
+- ✅ **Gestures** - Any PanResponder-based interaction
+
+**How it works:** The library wraps your app with a `PanResponder` that detects all touch events. When the user interacts with the app, the inactivity timer automatically resets, keeping the session alive. If the user is idle (no interaction) for the configured `timeout` duration, the `onTimeout` callback is triggered.
+
+**Example Use Case:**
+```tsx
+// Logout user after 5 minutes of inactivity
+<SessionTimeoutProvider
+  timeout={300000} // 5 minutes
+  onTimeout={() => {
+    console.log('User has been idle for 5 minutes');
+    // Perform logout
+  }}
+>
+  <YourApp />
+</SessionTimeoutProvider>
+```
 
 ## API
 
