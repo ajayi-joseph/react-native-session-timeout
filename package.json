@@ -1,6 +1,6 @@
 {
   "name": "react-native-session-timeout",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A React Native library for handling user session timeouts with app lifecycle support, warning dialogs, and Android 10+ compatibility",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
