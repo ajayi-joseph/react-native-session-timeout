@@ -194,8 +194,6 @@ export function SessionTimeoutProvider({
     resumeTimer,
   };
 
-
-
   return (
     <SessionTimeoutContext.Provider value={contextValue}>
       <View style={styles.flex1} {...panResponder.panHandlers}>

@@ -94,7 +94,7 @@ jest.mock('react-native', () => {
   // Mock StyleSheet.create
   Object.defineProperty(RN, 'StyleSheet', {
     value: {
-      create: jest.fn(styles => styles),
+      create: jest.fn((styles) => styles),
     },
     configurable: true,
   });
