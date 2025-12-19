@@ -5,7 +5,7 @@ import React, {
   useRef,
   PropsWithChildren,
 } from 'react';
-import { AppState, AppStateStatus, PanResponder, View } from 'react-native';
+import { AppState, AppStateStatus, PanResponder, View, StyleSheet } from 'react-native';
 import { SessionTimeoutContext } from './SessionTimeoutContext';
 import NativeSessionTimeout from './NativeModule';
 import type { SessionTimeoutConfig } from './types';
@@ -184,9 +184,13 @@ export function SessionTimeoutProvider({
     resumeTimer,
   };
 
+  const styles = StyleSheet.create({
+    flex1: { flex: 1 },
+  });
+
   return (
     <SessionTimeoutContext.Provider value={contextValue}>
-      <View style={{ flex: 1 }} {...panResponder.panHandlers}>
+      <View style={styles.flex1} {...panResponder.panHandlers}>
         {children}
       </View>
     </SessionTimeoutContext.Provider>
