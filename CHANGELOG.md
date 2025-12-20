@@ -1,5 +1,32 @@
 # Changelog
 
+## [0.1.4] - 2025-12-20
+
+### Changed
+
+- Refactored timer logic in `SessionTimeoutProvider` for improved accuracy and reliability (timestamp-based, no skipped seconds on pause/resume/reset)
+- All timer and polling functions now use `useCallback` for stable references and lint compliance
+- Updated all React hook dependencies to resolve `react-hooks/exhaustive-deps` warnings
+- Improved code formatting and removed unnecessary whitespace
+
+### Fixed
+
+- Fixed timer skipping seconds on pause, resume, and reset
+- Fixed all React hook dependency warnings
+
+## [0.1.3] - 2025-12-18
+
+### Changed
+
+- Improved session timeout logic and enhanced polling mechanism in `SessionTimeoutProvider`
+- Updated package version and refined `package.json` structure for clarity
+- Refactored and improved code formatting across multiple files
+
+### Fixed
+
+- Updated ESLint configuration and added TypeScript ESLint dependencies
+- Fixed issues with pause and resume timer functionality
+
 ## [0.1.2] - 2025-12-15
 
 ### Fixed
