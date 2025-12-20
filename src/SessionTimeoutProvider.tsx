@@ -189,7 +189,7 @@ export function SessionTimeoutProvider({
     return () => {
       subscription.remove();
     };
-  }, [pauseOnBackground]);
+  }, [pauseOnBackground, pauseTimer, resumeTimer]);
 
   // Initialize timer on mount
   useEffect(() => {
@@ -199,9 +199,9 @@ export function SessionTimeoutProvider({
 
     return () => {
       stopPolling();
-      NativeSessionTimeout.stopTimer().catch(console.error);
+      NativeSessionTimeout.stopTimer?.().catch?.(console.error);
     };
-  }, []);
+  }, [enabled, startTimer]);
 
   // Create pan responder
   const panResponder = useRef(
