@@ -5,22 +5,13 @@
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
   "types": "lib/typescript/src/index.d.ts",
-  "react-native": "src/index.tsx",
   "source": "src/index.tsx",
-  "files": [
-    "src",
-    "lib",
-    "android",
-    "ios",
-    "cpp",
-    "react-native-session-timeout.podspec",
-    "!lib/typescript/example",
-    "!android/build",
-    "!ios/build",
-    "!**/__tests__",
-    "!**/__fixtures__",
-    "!**/__mocks__"
-  ],
+    "files": [
+      "lib",
+      "android",
+      "ios",
+      "react-native-session-timeout.podspec"
+    ],
   "scripts": {
     "test": "jest",
     "typescript": "tsc --noEmit",

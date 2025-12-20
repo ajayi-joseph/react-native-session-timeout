@@ -1,0 +1,20 @@
+# Exclude unnecessary files from npm package
+.DS_Store
+coverage/
+modules/
+example/
+__mocks__/
+__tests__/
+__fixtures__/
+.vscode/
+.git/
+.gitignore
+babel.config.js
+jest.polyfills.js
+jest.setup.js
+react-native.config.js
+tsconfig*.json
+*.test.*
+*.spec.*
+*.map
+*.log
