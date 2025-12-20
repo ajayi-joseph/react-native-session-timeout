@@ -274,6 +274,24 @@ This library is essential for apps that require automatic logout for security:
 
 ![Simulator Screen Recording - iPhone 15 Pro - 2025-12-13 at 23 45 30](https://github.com/user-attachments/assets/2fa81613-7457-4f06-8fd2-8bf60faf1c6a)
 
+## Tips
+
+### Preventing Unwanted Timer Resets
+
+By default, any touch or gesture anywhere in your app will reset the inactivity timer, thanks to the global PanResponder. If you have UI elements (like control buttons, modals, or overlays) that should NOT reset the timer when interacted with, wrap them in a View with `onStartShouldSetResponder={() => true}`. This prevents touch events from bubbling up to the SessionTimeoutProvider's PanResponder.
+
+**Example:**
+
+```tsx
+<View onStartShouldSetResponder={() => true}>
+  <TouchableOpacity onPress={pauseTimer}>
+    <Text>Pause Timer</Text>
+  </TouchableOpacity>
+</View>
+```
+
+This ensures that only intended interactions reset the timer, while controls and overlays behave as expected.
+
 ## License
 
 MIT
