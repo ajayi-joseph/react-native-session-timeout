@@ -4,9 +4,9 @@ import React
 @objc(SessionTimeoutModule)
 class SessionTimeoutModule: NSObject {
     private var timer: Timer?
-    private var timeoutDuration: TimeInterval = 0
+    private var originalTimeout: TimeInterval = 0    // Never changes after startTimer
+    private var currentDuration: TimeInterval = 0    // Duration for current scheduled timer
     private var remainingTime: TimeInterval = 0
-    private var pausedTime: Date?
     private var isActive: Bool = false
     private var isPaused: Bool = false
     private var lastResetTime: Date?
@@ -23,13 +23,14 @@ class SessionTimeoutModule: NSObject {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             
-            self.timeoutDuration = timeout / 1000.0 // Convert ms to seconds
-            self.remainingTime = self.timeoutDuration
+            self.originalTimeout = timeout / 1000.0  // Convert ms to seconds
+            self.currentDuration = self.originalTimeout
+            self.remainingTime = self.originalTimeout
             self.lastResetTime = Date()
             self.isActive = true
             self.isPaused = false
             
-            self.scheduleTimeout()
+            self.scheduleTimeout(duration: self.currentDuration)
             resolver(nil)
         }
     }
@@ -45,6 +46,7 @@ class SessionTimeoutModule: NSObject {
             self.isActive = false
             self.isPaused = false
             self.remainingTime = 0
+            self.currentDuration = 0
             resolver(nil)
         }
     }
@@ -55,16 +57,22 @@ class SessionTimeoutModule: NSObject {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             
+            // Don't reset if timer was never started
+            guard self.originalTimeout > 0 else {
+                resolver(nil)
+                return
+            }
+            
             self.timer?.invalidate()
             self.timer = nil
             
-            self.remainingTime = self.timeoutDuration
+            self.currentDuration = self.originalTimeout
+            self.remainingTime = self.originalTimeout
             self.lastResetTime = Date()
             self.isPaused = false
+            self.isActive = true
             
-            if self.isActive {
-                self.scheduleTimeout()
-            }
+            self.scheduleTimeout(duration: self.currentDuration)
             
             resolver(nil)
         }
@@ -82,10 +90,9 @@ class SessionTimeoutModule: NSObject {
                 
                 if let lastReset = self.lastResetTime {
                     let elapsed = Date().timeIntervalSince(lastReset)
-                    self.remainingTime = max(0, self.timeoutDuration - elapsed)
+                    self.remainingTime = max(0, self.currentDuration - elapsed)
                 }
                 
-                self.pausedTime = Date()
                 self.isPaused = true
             }
             
@@ -101,9 +108,9 @@ class SessionTimeoutModule: NSObject {
             
             if self.isPaused && self.isActive {
                 self.lastResetTime = Date()
-                self.timeoutDuration = self.remainingTime
+                self.currentDuration = self.remainingTime
                 self.isPaused = false
-                self.scheduleTimeout()
+                self.scheduleTimeout(duration: self.currentDuration)
             }
             
             resolver(nil)
@@ -125,12 +132,12 @@ class SessionTimeoutModule: NSObject {
             }
             
             if self.isPaused {
-                resolver(self.remainingTime * 1000.0) // Convert to ms
+                resolver(self.remainingTime * 1000.0)  // Convert to ms
             } else {
                 if let lastReset = self.lastResetTime {
                     let elapsed = Date().timeIntervalSince(lastReset)
-                    let remaining = max(0, self.timeoutDuration - elapsed)
-                    resolver(remaining * 1000.0) // Convert to ms
+                    let remaining = max(0, self.currentDuration - elapsed)
+                    resolver(remaining * 1000.0)  // Convert to ms
                 } else {
                     resolver(0)
                 }
@@ -150,26 +157,23 @@ class SessionTimeoutModule: NSObject {
         }
     }
     
-    private func scheduleTimeout() {
+    private func scheduleTimeout(duration: TimeInterval) {
         timer?.invalidate()
         timer = nil
         
-        timer = Timer.scheduledTimer(withTimeInterval: timeoutDuration, repeats: false) { [weak self] _ in
+        timer = Timer.scheduledTimer(withTimeInterval: duration, repeats: false) { [weak self] _ in
             guard let self = self else { return }
             self.isActive = false
             self.remainingTime = 0
-            // Timer expired - this will be caught by the JS polling
         }
     }
     
     @objc
     func addListener(_ eventName: String) {
-        // Required for RCT built-in Event Emitter Calls
     }
     
     @objc
     func removeListeners(_ count: Double) {
-        // Required for RCT built-in Event Emitter Calls
     }
     
     deinit {

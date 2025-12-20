@@ -20,9 +20,9 @@ public class SessionTimeoutModule extends ReactContextBaseJavaModule implements 
     private Handler handler;
     private Runnable timeoutRunnable;
     
-    private long timeoutDuration = 0;
+    private long originalTimeout = 0;      // Never changes after startTimer
+    private long currentDuration = 0;      // Duration for current scheduled timer
     private long remainingTime = 0;
-    private long pausedTime = 0;
     private boolean isActive = false;
     private boolean isPaused = false;
     private long lastResetTime = 0;
@@ -43,13 +43,14 @@ public class SessionTimeoutModule extends ReactContextBaseJavaModule implements 
     @ReactMethod
     public void startTimer(double timeout, Promise promise) {
         try {
-            this.timeoutDuration = (long) timeout;
+            this.originalTimeout = (long) timeout;
+            this.currentDuration = (long) timeout;
             this.remainingTime = (long) timeout;
             this.lastResetTime = System.currentTimeMillis();
             this.isActive = true;
             this.isPaused = false;
             
-            scheduleTimeout();
+            scheduleTimeout(currentDuration);
             promise.resolve(null);
         } catch (Exception e) {
             promise.reject("START_TIMER_ERROR", e.getMessage(), e);
@@ -66,6 +67,7 @@ public class SessionTimeoutModule extends ReactContextBaseJavaModule implements 
             isActive = false;
             isPaused = false;
             remainingTime = 0;
+            currentDuration = 0;
             promise.resolve(null);
         } catch (Exception e) {
             promise.reject("STOP_TIMER_ERROR", e.getMessage(), e);
@@ -75,17 +77,23 @@ public class SessionTimeoutModule extends ReactContextBaseJavaModule implements 
     @ReactMethod
     public void resetTimer(Promise promise) {
         try {
+            // Don't reset if timer was never started
+            if (this.originalTimeout <= 0) {
+                promise.resolve(null);
+                return;
+            }
+            
             if (timeoutRunnable != null) {
                 handler.removeCallbacks(timeoutRunnable);
             }
             
-            this.remainingTime = this.timeoutDuration;
+            this.currentDuration = this.originalTimeout;
+            this.remainingTime = this.originalTimeout;
             this.lastResetTime = System.currentTimeMillis();
             this.isPaused = false;
+            this.isActive = true;
             
-            if (this.isActive) {
-                scheduleTimeout();
-            }
+            scheduleTimeout(currentDuration);
             
             promise.resolve(null);
         } catch (Exception e) {
@@ -102,8 +110,7 @@ public class SessionTimeoutModule extends ReactContextBaseJavaModule implements 
                 }
                 
                 long elapsed = System.currentTimeMillis() - lastResetTime;
-                remainingTime = Math.max(0, timeoutDuration - elapsed);
-                pausedTime = System.currentTimeMillis();
+                remainingTime = Math.max(0, currentDuration - elapsed);
                 isPaused = true;
             }
             promise.resolve(null);
@@ -117,9 +124,9 @@ public class SessionTimeoutModule extends ReactContextBaseJavaModule implements 
         try {
             if (isPaused && isActive) {
                 lastResetTime = System.currentTimeMillis();
-                timeoutDuration = remainingTime;
+                currentDuration = remainingTime;
                 isPaused = false;
-                scheduleTimeout();
+                scheduleTimeout(currentDuration);
             }
             promise.resolve(null);
         } catch (Exception e) {
@@ -131,7 +138,7 @@ public class SessionTimeoutModule extends ReactContextBaseJavaModule implements 
     public void getRemainingTime(Promise promise) {
         try {
             if (!isActive) {
-                promise.resolve(0);
+                promise.resolve(0.0);
                 return;
             }
             
@@ -139,7 +146,7 @@ public class SessionTimeoutModule extends ReactContextBaseJavaModule implements 
                 promise.resolve((double) remainingTime);
             } else {
                 long elapsed = System.currentTimeMillis() - lastResetTime;
-                long remaining = Math.max(0, timeoutDuration - elapsed);
+                long remaining = Math.max(0, currentDuration - elapsed);
                 promise.resolve((double) remaining);
             }
         } catch (Exception e) {
@@ -156,7 +163,7 @@ public class SessionTimeoutModule extends ReactContextBaseJavaModule implements 
         }
     }
 
-    private void scheduleTimeout() {
+    private void scheduleTimeout(long duration) {
         if (timeoutRunnable != null) {
             handler.removeCallbacks(timeoutRunnable);
         }
@@ -166,21 +173,18 @@ public class SessionTimeoutModule extends ReactContextBaseJavaModule implements 
             public void run() {
                 isActive = false;
                 remainingTime = 0;
-                // Timer expired - this will be caught by the JS polling
             }
         };
         
-        handler.postDelayed(timeoutRunnable, timeoutDuration);
+        handler.postDelayed(timeoutRunnable, duration);
     }
 
     @Override
     public void onHostResume() {
-        // App came to foreground - handled by JS layer based on pauseOnBackground prop
     }
 
     @Override
     public void onHostPause() {
-        // App went to background - handled by JS layer based on pauseOnBackground prop
     }
 
     @Override
@@ -203,11 +207,9 @@ public class SessionTimeoutModule extends ReactContextBaseJavaModule implements 
 
     @ReactMethod
     public void addListener(String eventName) {
-        // Required for RCT built-in Event Emitter Calls
     }
 
     @ReactMethod
     public void removeListeners(Integer count) {
-        // Required for RCT built-in Event Emitter Calls
     }
 }

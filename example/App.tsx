@@ -107,7 +107,15 @@ function AppContent() {
           </View>
         </View>
 
-        <View style={styles.controls}>
+        {/* 
+          Wrap controls in a View with onStartShouldSetResponder to prevent 
+          touch events from bubbling up to the SessionTimeoutProvider's PanResponder.
+          This ensures button taps only trigger their onPress, not resetTimer.
+        */}
+        <View 
+          style={styles.controls}
+          onStartShouldSetResponder={() => true}
+        >
           <Text style={styles.controlsTitle}>Manual Controls</Text>
           <TouchableOpacity style={styles.controlButton} onPress={resetTimer}>
             <Text style={styles.controlButtonText}>🔄 Reset Timer</Text>
@@ -123,15 +131,26 @@ function AppContent() {
         <View style={styles.infoCard}>
           <Text style={styles.infoTitle}>How It Works:</Text>
           <Text style={styles.infoText}>
-            • Timer starts at 20 seconds{'\n'}• Warning appears at 10 seconds
-            {'\n'}• Session expires at 0 seconds{'\n'}• Any interaction resets
-            the timer{'\n'}• Test by waiting or using controls above
+            • Timer starts at 20 seconds{'\n'}
+            • Warning appears at 10 seconds{'\n'}
+            • Session expires at 0 seconds{'\n'}
+            • Any interaction resets the timer{'\n'}
+            • Test by waiting or using controls above
+          </Text>
+        </View>
+
+        <View style={styles.tipCard}>
+          <Text style={styles.tipTitle}>💡 Tip:</Text>
+          <Text style={styles.tipText}>
+            The control buttons are wrapped with onStartShouldSetResponder to
+            prevent them from triggering the activity detector. In your app,
+            wrap any UI that shouldn't reset the timer the same way.
           </Text>
         </View>
 
         <View style={styles.footer}>
           <Text style={styles.footerText}>
-            👆 Tap anywhere or use controls to interact
+            👆 Tap anywhere else to reset the timer
           </Text>
         </View>
       </ScrollView>
@@ -225,7 +244,6 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
   statusBanner: {
-    // small wrapper around the dot to provide spacing or background if needed
     padding: 2,
     borderRadius: 8,
   },
@@ -278,6 +296,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FEF3C7',
     borderRadius: 12,
     padding: 20,
+    marginBottom: 20,
   },
   infoTitle: {
     fontSize: 16,
@@ -290,14 +309,25 @@ const styles = StyleSheet.create({
     color: '#92400E',
     lineHeight: 22,
   },
-  featureText: {
-    fontSize: 13,
-    color: '#78350F',
+  tipCard: {
+    backgroundColor: '#DBEAFE',
+    borderRadius: 12,
+    padding: 20,
+    marginBottom: 20,
+  },
+  tipTitle: {
+    fontSize: 16,
     fontWeight: '600',
-    fontStyle: 'italic',
+    color: '#1E40AF',
+    marginBottom: 8,
+  },
+  tipText: {
+    fontSize: 14,
+    color: '#1E40AF',
+    lineHeight: 20,
   },
   footer: {
-    marginTop: 30,
+    marginTop: 10,
     marginBottom: 20,
     alignItems: 'center',
   },

@@ -1,7 +1,6 @@
 import React, {
   useEffect,
   useState,
-  useCallback,
   useRef,
   PropsWithChildren,
 } from 'react';
@@ -12,15 +11,14 @@ import {
   View,
   StyleSheet,
 } from 'react-native';
-// Style for root View
+
 const styles = StyleSheet.create({
   flex1: { flex: 1 },
 });
+
 import { SessionTimeoutContext } from './SessionTimeoutContext';
 import NativeSessionTimeout from './NativeModule';
 import type { SessionTimeoutConfig } from './types';
-
-// Create event emitter with proper null check
 
 export function SessionTimeoutProvider({
   children,
@@ -38,94 +36,136 @@ export function SessionTimeoutProvider({
   const warningTriggeredRef = useRef(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const appStateRef = useRef(AppState.currentState);
+  
+  // Store ALL state setters and props in refs to avoid stale closures
+  const stateRef = useRef({
+    setRemainingTime,
+    setIsWarning,
+    setIsActive,
+    timeout,
+    warningDuration,
+    onTimeout,
+    onWarning,
+  });
+  
+  // Update refs on every render
+  stateRef.current = {
+    setRemainingTime,
+    setIsWarning,
+    setIsActive,
+    timeout,
+    warningDuration,
+    onTimeout,
+    onWarning,
+  };
 
-  // Update remaining time periodically
-  const updateRemainingTime = useCallback(async () => {
+  // Poll function - extracted so we can call it immediately
+  const pollRemainingTime = async () => {
     try {
       const remaining = await NativeSessionTimeout.getRemainingTime();
-      setRemainingTime(remaining);
+      const { 
+        setRemainingTime: setRemaining, 
+        setIsWarning: setWarning, 
+        setIsActive: setActive,
+        warningDuration: wd, 
+        onWarning: ow, 
+        onTimeout: ot 
+      } = stateRef.current;
+      
+      setRemaining(remaining);
 
-      // Check if we should show warning
-      if (remaining <= warningDuration && remaining > 0) {
+      if (remaining <= wd && remaining > 0) {
         if (!warningTriggeredRef.current) {
           warningTriggeredRef.current = true;
-          setIsWarning(true);
-          onWarning?.(remaining);
+          setWarning(true);
+          ow?.(remaining);
         }
       }
 
-      // Check if timeout occurred
       if (remaining <= 0) {
-        setIsWarning(false);
-        setIsActive(false);
-        onTimeout();
+        setWarning(false);
+        setActive(false);
+        ot();
         if (intervalRef.current) {
           clearInterval(intervalRef.current);
           intervalRef.current = null;
         }
       }
     } catch (error) {
-      console.error('Error updating remaining time:', error);
+      console.error('Error polling:', error);
     }
-  }, [warningDuration, onWarning, onTimeout]);
+  };
 
-  // Start the timer
-  const startTimer = useCallback(async () => {
+  // Start polling - polls immediately, then every second
+  const startPolling = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+    
+    // Poll immediately to avoid 20->18 skip
+    pollRemainingTime();
+    
+    // Then poll every second
+    intervalRef.current = setInterval(pollRemainingTime, 1000);
+  };
+
+  // Stop polling
+  const stopPolling = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  };
+
+  // Timer controls
+  const startTimer = async () => {
     try {
-      await NativeSessionTimeout.startTimer(timeout);
-      setIsActive(true);
-      setIsWarning(false);
+      await NativeSessionTimeout.startTimer(stateRef.current.timeout);
+      stateRef.current.setIsActive(true);
+      stateRef.current.setIsWarning(false);
       warningTriggeredRef.current = false;
-
-      // Start polling for remaining time
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-      intervalRef.current = setInterval(updateRemainingTime, 1000);
+      startPolling();
     } catch (error) {
       console.error('Error starting timer:', error);
     }
-  }, [timeout, updateRemainingTime]);
+  };
 
-  // Reset the timer
-  const resetTimer = useCallback(async () => {
+  const resetTimer = async () => {
     try {
       await NativeSessionTimeout.resetTimer();
-      setRemainingTime(timeout);
-      setIsWarning(false);
+      stateRef.current.setRemainingTime(stateRef.current.timeout);
+      stateRef.current.setIsWarning(false);
       warningTriggeredRef.current = false;
-      setIsActive(true);
+      stateRef.current.setIsActive(true);
+      startPolling();
     } catch (error) {
       console.error('Error resetting timer:', error);
     }
-  }, [timeout]);
+  };
 
-  // Pause the timer
-  const pauseTimer = useCallback(async () => {
+  const pauseTimer = async () => {
     try {
       await NativeSessionTimeout.pauseTimer();
-      setIsActive(false);
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
+      stateRef.current.setIsActive(false);
+      stopPolling();
     } catch (error) {
       console.error('Error pausing timer:', error);
     }
-  }, []);
+  };
 
-  // Resume the timer
-  const resumeTimer = useCallback(async () => {
+  const resumeTimer = async () => {
     try {
       await NativeSessionTimeout.resumeTimer();
-      setIsActive(true);
-      if (!intervalRef.current) {
-        intervalRef.current = setInterval(updateRemainingTime, 1000);
-      }
+      stateRef.current.setIsActive(true);
+      startPolling();
     } catch (error) {
       console.error('Error resuming timer:', error);
     }
-  }, [updateRemainingTime]);
+  };
+
+  // Store resetTimer in ref for PanResponder
+  const resetTimerRef = useRef(resetTimer);
+  resetTimerRef.current = resetTimer;
 
   // Handle app state changes
   useEffect(() => {
@@ -136,7 +176,6 @@ export function SessionTimeoutProvider({
           appStateRef.current.match(/inactive|background/) &&
           nextAppState === 'active'
         ) {
-          // App has come to foreground
           if (pauseOnBackground) {
             await resumeTimer();
           }
@@ -144,12 +183,10 @@ export function SessionTimeoutProvider({
           appStateRef.current === 'active' &&
           nextAppState.match(/inactive|background/)
         ) {
-          // App has gone to background
           if (pauseOnBackground) {
             await pauseTimer();
           }
         }
-
         appStateRef.current = nextAppState;
       }
     );
@@ -157,29 +194,25 @@ export function SessionTimeoutProvider({
     return () => {
       subscription.remove();
     };
-  }, [pauseOnBackground, pauseTimer, resumeTimer]);
+  }, [pauseOnBackground]);
 
-  // Initialize timer
+  // Initialize timer on mount
   useEffect(() => {
     if (enabled) {
       startTimer();
-    } else {
-      pauseTimer();
     }
 
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
+      stopPolling();
       NativeSessionTimeout.stopTimer().catch(console.error);
     };
-  }, [enabled, startTimer, pauseTimer]);
+  }, []);
 
-  // Create pan responder to detect user activity
+  // Create pan responder
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => {
-        resetTimer();
+        resetTimerRef.current();
         return false;
       },
     })
