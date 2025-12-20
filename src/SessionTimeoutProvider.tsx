@@ -113,7 +113,8 @@ export function SessionTimeoutProvider({
   };
 
   // Timer controls
-  const startTimer = async () => {
+
+  const startTimer = React.useCallback(async () => {
     try {
       await NativeSessionTimeout.startTimer(stateRef.current.timeout);
       stateRef.current.setIsActive(true);
@@ -123,9 +124,9 @@ export function SessionTimeoutProvider({
     } catch (error) {
       console.error('Error starting timer:', error);
     }
-  };
+  }, [startPolling]);
 
-  const resetTimer = async () => {
+  const resetTimer = React.useCallback(async () => {
     try {
       await NativeSessionTimeout.resetTimer();
       stateRef.current.setRemainingTime(stateRef.current.timeout);
@@ -136,9 +137,9 @@ export function SessionTimeoutProvider({
     } catch (error) {
       console.error('Error resetting timer:', error);
     }
-  };
+  }, [startPolling]);
 
-  const pauseTimer = async () => {
+  const pauseTimer = React.useCallback(async () => {
     try {
       await NativeSessionTimeout.pauseTimer();
       stateRef.current.setIsActive(false);
@@ -146,9 +147,9 @@ export function SessionTimeoutProvider({
     } catch (error) {
       console.error('Error pausing timer:', error);
     }
-  };
+  }, [stopPolling]);
 
-  const resumeTimer = async () => {
+  const resumeTimer = React.useCallback(async () => {
     try {
       await NativeSessionTimeout.resumeTimer();
       stateRef.current.setIsActive(true);
@@ -156,7 +157,7 @@ export function SessionTimeoutProvider({
     } catch (error) {
       console.error('Error resuming timer:', error);
     }
-  };
+  }, [startPolling]);
 
   // Store resetTimer in ref for PanResponder
   const resetTimerRef = useRef(resetTimer);
