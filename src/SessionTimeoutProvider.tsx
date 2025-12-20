@@ -54,8 +54,9 @@ export function SessionTimeoutProvider({
     onWarning,
   };
 
+
   // Poll function - extracted so we can call it immediately
-  const pollRemainingTime = async () => {
+  const pollRemainingTime = React.useCallback(async () => {
     try {
       const remaining = await NativeSessionTimeout.getRemainingTime();
       const {
@@ -89,10 +90,11 @@ export function SessionTimeoutProvider({
     } catch (error) {
       console.error('Error polling:', error);
     }
-  };
+  }, []);
 
 
   // Start polling - polls immediately, then every second
+
   const startPolling = React.useCallback(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
@@ -201,8 +203,8 @@ export function SessionTimeoutProvider({
       stopPolling();
       NativeSessionTimeout.stopTimer?.().catch?.(console.error);
     };
-  }, [enabled, startTimer]);
-
+  }, [enabled, startTimer, stopPolling]);
+//
   // Create pan responder
   const panResponder = useRef(
     PanResponder.create({
