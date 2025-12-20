@@ -1,9 +1,4 @@
-import React, {
-  useEffect,
-  useState,
-  useRef,
-  PropsWithChildren,
-} from 'react';
+import React, { useEffect, useState, useRef, PropsWithChildren } from 'react';
 import {
   AppState,
   AppStateStatus,
@@ -36,7 +31,7 @@ export function SessionTimeoutProvider({
   const warningTriggeredRef = useRef(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const appStateRef = useRef(AppState.currentState);
-  
+
   // Store ALL state setters and props in refs to avoid stale closures
   const stateRef = useRef({
     setRemainingTime,
@@ -47,7 +42,7 @@ export function SessionTimeoutProvider({
     onTimeout,
     onWarning,
   });
-  
+
   // Update refs on every render
   stateRef.current = {
     setRemainingTime,
@@ -63,15 +58,15 @@ export function SessionTimeoutProvider({
   const pollRemainingTime = async () => {
     try {
       const remaining = await NativeSessionTimeout.getRemainingTime();
-      const { 
-        setRemainingTime: setRemaining, 
-        setIsWarning: setWarning, 
+      const {
+        setRemainingTime: setRemaining,
+        setIsWarning: setWarning,
         setIsActive: setActive,
-        warningDuration: wd, 
-        onWarning: ow, 
-        onTimeout: ot 
+        warningDuration: wd,
+        onWarning: ow,
+        onTimeout: ot,
       } = stateRef.current;
-      
+
       setRemaining(remaining);
 
       if (remaining <= wd && remaining > 0) {
@@ -101,10 +96,10 @@ export function SessionTimeoutProvider({
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
-    
+
     // Poll immediately to avoid 20->18 skip
     pollRemainingTime();
-    
+
     // Then poll every second
     intervalRef.current = setInterval(pollRemainingTime, 1000);
   };

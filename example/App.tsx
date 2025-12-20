@@ -112,10 +112,7 @@ function AppContent() {
           touch events from bubbling up to the SessionTimeoutProvider's PanResponder.
           This ensures button taps only trigger their onPress, not resetTimer.
         */}
-        <View 
-          style={styles.controls}
-          onStartShouldSetResponder={() => true}
-        >
+        <View style={styles.controls} onStartShouldSetResponder={() => true}>
           <Text style={styles.controlsTitle}>Manual Controls</Text>
           <TouchableOpacity style={styles.controlButton} onPress={resetTimer}>
             <Text style={styles.controlButtonText}>🔄 Reset Timer</Text>
@@ -131,11 +128,9 @@ function AppContent() {
         <View style={styles.infoCard}>
           <Text style={styles.infoTitle}>How It Works:</Text>
           <Text style={styles.infoText}>
-            • Timer starts at 20 seconds{'\n'}
-            • Warning appears at 10 seconds{'\n'}
-            • Session expires at 0 seconds{'\n'}
-            • Any interaction resets the timer{'\n'}
-            • Test by waiting or using controls above
+            • Timer starts at 20 seconds{'\n'}• Warning appears at 10 seconds
+            {'\n'}• Session expires at 0 seconds{'\n'}• Any interaction resets
+            the timer{'\n'}• Test by waiting or using controls above
           </Text>
         </View>
 
