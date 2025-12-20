@@ -91,26 +91,25 @@ export function SessionTimeoutProvider({
     }
   };
 
+
   // Start polling - polls immediately, then every second
-  const startPolling = () => {
+  const startPolling = React.useCallback(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
-
     // Poll immediately to avoid 20->18 skip
     pollRemainingTime();
-
     // Then poll every second
     intervalRef.current = setInterval(pollRemainingTime, 1000);
-  };
+  }, [pollRemainingTime]);
 
   // Stop polling
-  const stopPolling = () => {
+  const stopPolling = React.useCallback(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
-  };
+  }, []);
 
   // Timer controls
 
