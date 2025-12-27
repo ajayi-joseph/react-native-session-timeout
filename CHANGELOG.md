@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.1.5] - 2025-12-27
+
+### Added
+
+- Added a "Tips" section to the README explaining how to prevent unwanted timer resets using `onStartShouldSetResponder`.
+
+### Changed
+
+- Documentation improvements for best practices and usage clarity.
+
 ## [0.1.4] - 2025-12-20
 
 ### Changed
