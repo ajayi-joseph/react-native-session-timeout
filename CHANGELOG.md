@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.6] - 2025-12-29
+
+### Changed
+
+- Reduced npm package size by refining the `files` field in `package.json` and updating `.npmignore` to exclude unnecessary files and build artifacts
+- Only essential native files and build outputs are now included in the published package
+- Improved package hygiene for faster installs and fewer native build issues
+
 ## [0.1.5] - 2025-12-27
 
 ### Added
