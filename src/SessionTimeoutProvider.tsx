@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useRef, PropsWithChildren } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+  PropsWithChildren,
+} from 'react';
 import {
   AppState,
   AppStateStatus,
@@ -55,7 +61,7 @@ export function SessionTimeoutProvider({
   };
 
   // Poll function - extracted so we can call it immediately
-  const pollRemainingTime = React.useCallback(async () => {
+  const pollRemainingTime = useCallback(async () => {
     try {
       const remaining = await NativeSessionTimeout.getRemainingTime();
       const {
@@ -93,7 +99,7 @@ export function SessionTimeoutProvider({
 
   // Start polling - polls immediately, then every second
 
-  const startPolling = React.useCallback(() => {
+  const startPolling = useCallback(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
@@ -104,7 +110,7 @@ export function SessionTimeoutProvider({
   }, [pollRemainingTime]);
 
   // Stop polling
-  const stopPolling = React.useCallback(() => {
+  const stopPolling = useCallback(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
@@ -113,7 +119,7 @@ export function SessionTimeoutProvider({
 
   // Timer controls
 
-  const startTimer = React.useCallback(async () => {
+  const startTimer = useCallback(async () => {
     try {
       await NativeSessionTimeout.startTimer(stateRef.current.timeout);
       stateRef.current.setIsActive(true);
@@ -125,7 +131,7 @@ export function SessionTimeoutProvider({
     }
   }, [startPolling]);
 
-  const resetTimer = React.useCallback(async () => {
+  const resetTimer = useCallback(async () => {
     try {
       await NativeSessionTimeout.resetTimer();
       stateRef.current.setRemainingTime(stateRef.current.timeout);
@@ -138,7 +144,7 @@ export function SessionTimeoutProvider({
     }
   }, [startPolling]);
 
-  const pauseTimer = React.useCallback(async () => {
+  const pauseTimer = useCallback(async () => {
     try {
       await NativeSessionTimeout.pauseTimer();
       stateRef.current.setIsActive(false);
@@ -148,7 +154,7 @@ export function SessionTimeoutProvider({
     }
   }, [stopPolling]);
 
-  const resumeTimer = React.useCallback(async () => {
+  const resumeTimer = useCallback(async () => {
     try {
       await NativeSessionTimeout.resumeTimer();
       stateRef.current.setIsActive(true);
