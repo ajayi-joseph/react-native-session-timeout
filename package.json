@@ -8,8 +8,11 @@
   "source": "src/index.tsx",
   "files": [
     "lib",
-    "android",
-    "ios",
+    "android/src",
+    "android/build.gradle",
+    "android/src/main/AndroidManifest.xml",
+    "ios/SessionTimeoutModule.m",
+    "ios/SessionTimeoutModule.swift",
     "react-native-session-timeout.podspec"
   ],
   "scripts": {
