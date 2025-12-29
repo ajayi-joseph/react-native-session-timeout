@@ -21,6 +21,7 @@ import {
   SessionTimeoutProvider,
   useSessionTimeout,
 } from 'react-native-session-timeout';
+import pkg from 'react-native-session-timeout/package.json';
 
 function WarningDialog() {
   const { isWarning, remainingTime, resetTimer } = useSessionTimeout();
@@ -63,6 +64,12 @@ function AppContent() {
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
+  const statusColor = isActive
+    ? isWarning
+      ? '#FFA500'
+      : '#10B981'
+    : '#EF4444';
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -71,6 +78,7 @@ function AppContent() {
           <Text style={styles.subtitle}>
             Timeout: 20 seconds • Warning: 10 seconds
           </Text>
+          <Text style={styles.subtitle}>Library version: {pkg.version}</Text>
         </View>
 
         <View style={styles.statusCard}>
@@ -81,13 +89,7 @@ function AppContent() {
                 style={[
                   styles.statusDot,
                   styles.statusBanner,
-                  {
-                    backgroundColor: isActive
-                      ? isWarning
-                        ? '#FFA500'
-                        : '#10B981'
-                      : '#EF4444',
-                  },
+                  { backgroundColor: statusColor },
                 ]}
               />
               <Text style={styles.statusText}>
@@ -107,8 +109,8 @@ function AppContent() {
           </View>
         </View>
 
-        {/* 
-          Wrap controls in a View with onStartShouldSetResponder to prevent 
+        {/*
+          Wrap controls in a View with onStartShouldSetResponder to prevent
           touch events from bubbling up to the SessionTimeoutProvider's PanResponder.
           This ensures button taps only trigger their onPress, not resetTimer.
         */}
