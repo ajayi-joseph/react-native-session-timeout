@@ -20,7 +20,10 @@
     "release": "release-it",
     "example": "yarn --cwd example",
     "pods": "cd example && pod-install --quiet",
-    "bootstrap": "yarn example && yarn && yarn pods"
+    "bootstrap": "yarn example && yarn && yarn pods",
+    "postinstall": "rm -rf example/node_modules/react-native-session-timeout/node_modules || true",
+    "example:android": "npm run prepare && npm run example && cd example && npx react-native run-android",
+    "example:ios": "npm run prepare && npm run example && cd example && npx react-native run-ios"
   },
   "keywords": [
     "react-native",
