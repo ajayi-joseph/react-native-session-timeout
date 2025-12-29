@@ -18,3 +18,13 @@ tsconfig*.json
 *.spec.*
 *.map
 *.log
+android/.gradle/
+android/build/
+android/buildSrc/
+android/.idea/
+android/local.properties
+android/.settings/
+android/.cxx/
+android/.externalNativeBuild/
+android/.DS_Store
+ios/build/
