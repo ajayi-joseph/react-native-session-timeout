@@ -8,6 +8,9 @@
   <a href="https://www.npmjs.com/package/react-native-session-timeout">
     <img src="https://img.shields.io/npm/dm/react-native-session-timeout.svg?style=flat-square" alt="npm downloads" />
   </a>
+  <a href="https://www.npmjs.com/package/react-native-session-timeout">
+    <img src="https://img.shields.io/npm/dt/react-native-session-timeout.svg?style=flat-square" alt="total npm downloads" />
+  </a>
   <a href="https://github.com/ajayi-joseph/react-native-session-timeout/blob/main/LICENSE">
     <img src="https://img.shields.io/npm/l/react-native-session-timeout.svg?style=flat-square" alt="license" />
   </a>
