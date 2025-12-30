@@ -16,3 +16,6 @@ xcuserdata/
 *.xcscmblueprint
 *.xccheckout
 Pods/
+
+# Ignore coverage reports
+coverage/
