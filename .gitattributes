@@ -1,8 +1,0 @@
-# Tell GitHub Linguist to ignore XML and config files for language stats
-android/src/main/AndroidManifest.xml linguist-documentation
-android/build.gradle linguist-documentation
-react-native-session-timeout.podspec linguist-documentation
-*.xml linguist-documentation
-*.gradle linguist-documentation
-*.podspec linguist-documentation
-*.json linguist-documentation
