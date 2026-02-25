@@ -1,0 +1,105 @@
+name: Bug Report
+description: Report a bug or unexpected behavior in react-native-session-timeout
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. Please fill out the sections below so we can investigate quickly.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise description of the bug.
+      placeholder: What happened? What did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: Step-by-step instructions to reproduce the issue.
+      placeholder: |
+        1. Configure the hook with `...`
+        2. Leave the app idle for `...`
+        3. See error / unexpected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened? Include error messages or logs if available.
+    validations:
+      required: true
+
+  - type: textarea
+    id: code
+    attributes:
+      label: Code Sample
+      description: A minimal reproducible example (if applicable).
+      render: tsx
+
+  - type: input
+    id: rn-version
+    attributes:
+      label: React Native Version
+      placeholder: e.g. 0.73.0
+    validations:
+      required: true
+
+  - type: input
+    id: lib-version
+    attributes:
+      label: react-native-session-timeout Version
+      placeholder: e.g. 1.0.0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      multiple: true
+      options:
+        - Android
+        - iOS
+    validations:
+      required: true
+
+  - type: input
+    id: device
+    attributes:
+      label: Device / OS Version
+      placeholder: e.g. Pixel 7 (Android 13), iPhone 14 (iOS 16)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: expo
+    attributes:
+      label: Are you using Expo?
+      options:
+        - "No"
+        - "Yes – Expo Go"
+        - "Yes – Expo Dev Client"
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other context, screenshots, or logs that may help.
