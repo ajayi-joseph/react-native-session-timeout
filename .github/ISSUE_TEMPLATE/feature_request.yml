@@ -1,0 +1,51 @@
+name: Feature Request
+description: Suggest a new feature or improvement for react-native-session-timeout
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an improvement! Please describe your idea clearly so we can evaluate and discuss it.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: Is your feature request related to a problem? Describe it.
+      placeholder: e.g. "I'm building a healthcare app and need to..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the feature you'd like and how it should work.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Have you considered any alternative approaches or workarounds?
+
+  - type: dropdown
+    id: use-case
+    attributes:
+      label: Use Case / Industry
+      description: What type of app would benefit from this feature?
+      multiple: true
+      options:
+        - Banking / Finance
+        - Healthcare
+        - Enterprise
+        - E-commerce
+        - General / Other
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any mockups, code snippets, or references that help illustrate the idea.
