@@ -18,6 +18,27 @@
 
 A comprehensive React Native library for **inactivity detection** and **idle app monitoring** with automatic session timeout management, customizable warning UI support, and full Android 10+ compatibility.
 
+## Table of Contents
+
+- [Why This Library?](#why-this-library)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Basic Usage](#basic-usage)
+  - [Using the Hook](#using-the-hook)
+  - [Custom Warning Dialog](#custom-warning-dialog)
+- [Inactivity Detection](#inactivity-detection)
+- [API](#api)
+  - [SessionTimeoutProvider Props](#sessiontimeoutprovider-props)
+  - [useSessionTimeout Hook](#usesessiontimeout-hook)
+- [How It Works](#how-it-works)
+  - [Implementation Example](#implementation-example)
+  - [Key Features](#key-features)
+- [Use Cases](#use-cases)
+- [Demo](#demo)
+- [Tips](#tips)
+- [License](#license)
+
 ## Why This Library?
 
 This library **detects user inactivity** and manages session expiration for security and compliance needs.
@@ -268,7 +289,6 @@ This library is essential for apps that require automatic logout for security:
 - 💼 **Enterprise** - Corporate security policies (ISO 27001)
 - 🏛️ **Government** - Classified/sensitive information handling
 - 🔐 **Security-sensitive apps** - Auto-logout after inactivity
--
 
 ## Demo
 
