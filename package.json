@@ -61,7 +61,7 @@
   "devDependencies": {
     "@eslint/js": "^9.39.4",
     "@react-native-community/eslint-config": "^3.2.0",
-    "@react-native/babel-preset": "0.84.1",
+    "@react-native/babel-preset": "0.85.1",
     "@release-it/conventional-changelog": "^10.0.3",
     "@testing-library/react-native": "^13.3.3",
     "@types/jest": "^29.5.14",
@@ -76,10 +76,10 @@
     "jest": "^29.7.0",
     "pod-install": "^1.0.9",
     "prettier": "^3.4.0",
-    "react": "19.2.4",
-    "react-native": "^0.84.0",
+    "react": "19.2.5",
+    "react-native": "^0.85.1",
     "react-native-builder-bob": "^0.41.0",
-    "react-test-renderer": "19.2.4",
+    "react-test-renderer": "19.2.5",
     "release-it": "^19.2.3",
     "typescript": "^5.7.0",
     "typescript-eslint": "^8.58.2"
