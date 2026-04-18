@@ -1,6 +1,7 @@
 {
   "name": "react-native-session-timeout",
   "version": "0.1.6",
+  "type": "module",
   "description": "A React Native library for handling user session timeouts with app lifecycle support, warning dialogs, and Android 10+ compatibility",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
@@ -58,6 +59,8 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "@react-native-community/eslint-config": "^3.2.0",
     "@react-native/babel-preset": "0.84.1",
     "@release-it/conventional-changelog": "^10.0.3",
     "@testing-library/react-native": "^13.3.3",
@@ -65,14 +68,11 @@
     "@types/node": "^25.0.6",
     "@types/react": "^19.2.8",
     "@types/react-native": "^0.73.0",
-    "@typescript-eslint/eslint-plugin": "^7.18.0",
-    "@typescript-eslint/parser": "^7.18.0",
-    "eslint": "^8.57.1",
-    "eslint-config-prettier": "^9.1.2",
-    "eslint-plugin-prettier": "^5.5.4",
+    "eslint": "^9.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.0",
     "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^4.6.2",
-    "eslint-plugin-react-native": "^4.1.0",
+    "eslint-plugin-react-native": "^5.0.0",
     "jest": "^29.7.0",
     "pod-install": "^1.0.9",
     "prettier": "^3.4.0",
@@ -81,7 +81,8 @@
     "react-native-builder-bob": "^0.41.0",
     "react-test-renderer": "19.2.4",
     "release-it": "^19.2.3",
-    "typescript": "^5.7.0"
+    "typescript": "^5.7.0",
+    "typescript-eslint": "^8.58.2"
   },
   "peerDependencies": {
     "react": "*",
@@ -90,7 +91,7 @@
   "jest": {
     "preset": "react-native",
     "setupFiles": [
-      "<rootDir>/jest.polyfills.js"
+      "<rootDir>/jest.polyfills.cjs"
     ],
     "modulePathIgnorePatterns": [
       "<rootDir>/example/node_modules",
@@ -100,7 +101,7 @@
       "<rootDir>/example/__tests__/"
     ],
     "setupFilesAfterEnv": [
-      "<rootDir>/jest.setup.js"
+      "<rootDir>/jest.setup.cjs"
     ],
     "transformIgnorePatterns": [
       "node_modules/(?!(react-native|@react-native|@react-navigation)/)"

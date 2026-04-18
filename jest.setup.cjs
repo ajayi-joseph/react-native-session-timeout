@@ -1,4 +1,3 @@
-/* eslint-env jest */
 // Mock Dimensions first, before any other mocks
 jest.mock('react-native/Libraries/Utilities/Dimensions', () => {
   const Dimensions = {
