@@ -213,6 +213,11 @@ The library **automatically detects user activity** and resets the timer on any 
 | `onWarning`         | `(remainingTime: number) => void` | No       | Callback when warning period starts                                 |
 | `enabled`           | `boolean`                         | No       | Enable/disable the timeout (default: true)                          |
 | `pauseOnBackground` | `boolean`                         | No       | Pause timer when app goes to background (default: false)            |
+| `requireBiometricOnResume` | `boolean` | No | Require biometric re-authentication when returning to the app during/after the warning state (default: false) |
+| `biometricConfig` | `BiometricConfig` | No | Text for the biometric prompt: `{ title?, subtitle?, cancelLabel? }` |
+| `biometricAuthenticator` | `(config?) => Promise<boolean>` | No | Custom biometric implementation. Auto-detects `react-native-biometrics` or `expo-local-authentication` if omitted |
+| `onBiometricSuccess` | `() => void` | No | Called when biometric re-authentication succeeds |
+| `onBiometricFailed` | `() => void` | No | Called when biometric re-authentication fails, is cancelled, or no authenticator is available |
 
 ### useSessionTimeout Hook
 
@@ -226,6 +231,61 @@ Returns an object with:
 | `pauseTimer`    | `() => void` | Pause the timer                      |
 | `resumeTimer`   | `() => void` | Resume the timer                     |
 | `isActive`      | `boolean`    | Whether timer is currently active    |
+| `isAuthenticating` | `boolean` | Whether a biometric re-authentication prompt is in progress |
+
+### Biometric Re-authentication
+
+For security-sensitive apps (banking, healthcare, enterprise), you can require
+biometric verification (Face ID / Touch ID / Android biometrics) when the user
+returns to the app while the session is in the warning state or after it has
+expired in the background.
+
+Install one of the supported biometric libraries (optional — you can also pass
+your own `biometricAuthenticator`):
+
+```sh
+npm install react-native-biometrics
+# or
+npx expo install expo-local-authentication
+```
+
+```tsx
+<SessionTimeoutProvider
+  timeout={300000}
+  warningDuration={30000}
+  requireBiometricOnResume={true}
+  biometricConfig={{
+    title: 'Re-authenticate to continue',
+    subtitle: 'Your session has expired',
+    cancelLabel: 'Log out',
+  }}
+  onBiometricSuccess={() => {
+    // Session was reset — user verified successfully
+  }}
+  onBiometricFailed={() => {
+    // Navigate to login screen
+  }}
+  onTimeout={() => {
+    // Session fully expired
+  }}
+>
+  <App />
+</SessionTimeoutProvider>
+```
+
+Behavior:
+
+- When the app returns to the foreground and the session had entered the
+  warning state (or expired) while the user was away, a biometric prompt is
+  shown before the session resumes.
+- On success, the session timer is reset and `onBiometricSuccess` fires.
+- On failure or cancellation, the session is deactivated and
+  `onBiometricFailed` fires — navigate the user to your login screen.
+- If neither `react-native-biometrics` nor `expo-local-authentication` is
+  installed and no custom `biometricAuthenticator` is provided, the resume is
+  treated as failed (fail-closed) and `onBiometricFailed` fires.
+- `useSessionTimeout()` exposes `isAuthenticating` so you can render an
+  overlay while the prompt is open.
 
 ## How It Works
 

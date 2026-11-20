@@ -19,6 +19,10 @@ const styles = StyleSheet.create({
 
 import { SessionTimeoutContext } from './SessionTimeoutContext';
 import NativeSessionTimeout from './NativeModule';
+import {
+  resolveDefaultAuthenticator,
+  MISSING_AUTHENTICATOR_ERROR,
+} from './BiometricAuth';
 import type { SessionTimeoutConfig } from './types';
 
 export function SessionTimeoutProvider({
@@ -29,12 +33,19 @@ export function SessionTimeoutProvider({
   onWarning,
   enabled = true,
   pauseOnBackground = false,
+  requireBiometricOnResume = false,
+  biometricConfig,
+  biometricAuthenticator,
+  onBiometricSuccess,
+  onBiometricFailed,
 }: PropsWithChildren<SessionTimeoutConfig>) {
   const [isWarning, setIsWarning] = useState(false);
   const [remainingTime, setRemainingTime] = useState(timeout);
   const [isActive, setIsActive] = useState(enabled);
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
 
   const warningTriggeredRef = useRef(false);
+  const isAuthenticatingRef = useRef(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const appStateRef = useRef(AppState.currentState);
 
@@ -43,10 +54,15 @@ export function SessionTimeoutProvider({
     setRemainingTime,
     setIsWarning,
     setIsActive,
+    setIsAuthenticating,
     timeout,
     warningDuration,
     onTimeout,
     onWarning,
+    biometricConfig,
+    biometricAuthenticator,
+    onBiometricSuccess,
+    onBiometricFailed,
   });
 
   // Update refs on every render
@@ -54,10 +70,15 @@ export function SessionTimeoutProvider({
     setRemainingTime,
     setIsWarning,
     setIsActive,
+    setIsAuthenticating,
     timeout,
     warningDuration,
     onTimeout,
     onWarning,
+    biometricConfig,
+    biometricAuthenticator,
+    onBiometricSuccess,
+    onBiometricFailed,
   };
 
   // Poll function - extracted so we can call it immediately
@@ -164,6 +185,52 @@ export function SessionTimeoutProvider({
     }
   }, [startPolling]);
 
+  // Biometric re-authentication gate. Runs when the app returns to the
+  // foreground while the session is in the warning state and
+  // `requireBiometricOnResume` is enabled.
+  const runBiometricAuth = useCallback(async () => {
+    if (isAuthenticatingRef.current) {
+      return;
+    }
+    isAuthenticatingRef.current = true;
+    stateRef.current.setIsAuthenticating(true);
+    stopPolling();
+
+    try {
+      const authenticator =
+        stateRef.current.biometricAuthenticator ??
+        resolveDefaultAuthenticator();
+
+      if (!authenticator) {
+        throw new Error(MISSING_AUTHENTICATOR_ERROR);
+      }
+
+      const success = await authenticator(stateRef.current.biometricConfig);
+
+      if (success) {
+        stateRef.current.onBiometricSuccess?.();
+        await resetTimer();
+      } else {
+        stateRef.current.setIsActive(false);
+        stateRef.current.setIsWarning(false);
+        try {
+          await NativeSessionTimeout.stopTimer();
+        } catch (stopError) {
+          console.error('Error stopping timer:', stopError);
+        }
+        stateRef.current.onBiometricFailed?.();
+      }
+    } catch (error) {
+      console.error('Biometric authentication error:', error);
+      stateRef.current.setIsActive(false);
+      stateRef.current.setIsWarning(false);
+      stateRef.current.onBiometricFailed?.();
+    } finally {
+      isAuthenticatingRef.current = false;
+      stateRef.current.setIsAuthenticating(false);
+    }
+  }, [resetTimer, stopPolling]);
+
   // Store resetTimer in ref for PanResponder
   const resetTimerRef = useRef(resetTimer);
   resetTimerRef.current = resetTimer;
@@ -177,7 +244,11 @@ export function SessionTimeoutProvider({
           appStateRef.current.match(/inactive|background/) &&
           nextAppState === 'active'
         ) {
-          if (pauseOnBackground) {
+          if (requireBiometricOnResume && warningTriggeredRef.current) {
+            // Session entered the warning state (or expired) while the
+            // user was away - gate the resume behind biometrics.
+            await runBiometricAuth();
+          } else if (pauseOnBackground) {
             await resumeTimer();
           }
         } else if (
@@ -195,7 +266,13 @@ export function SessionTimeoutProvider({
     return () => {
       subscription.remove();
     };
-  }, [pauseOnBackground, pauseTimer, resumeTimer]);
+  }, [
+    pauseOnBackground,
+    requireBiometricOnResume,
+    pauseTimer,
+    resumeTimer,
+    runBiometricAuth,
+  ]);
 
   // Initialize timer on mount
   useEffect(() => {
@@ -223,6 +300,7 @@ export function SessionTimeoutProvider({
     isWarning,
     remainingTime,
     isActive,
+    isAuthenticating,
     resetTimer,
     pauseTimer,
     resumeTimer,
