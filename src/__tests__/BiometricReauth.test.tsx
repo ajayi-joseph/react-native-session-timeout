@@ -19,8 +19,6 @@ jest.mock('../NativeModule', () => ({
   },
 }));
 
-const TestComponent = () => null;
-
 type Listener = (state: string) => void | Promise<void>;
 
 describe('Biometric re-authentication on resume (issue #28)', () => {

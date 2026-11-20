@@ -11,7 +11,7 @@ const DEFAULT_CANCEL = 'Cancel';
 export function resolveDefaultAuthenticator(): BiometricAuthenticator | null {
   // react-native-biometrics
   try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const mod = require('react-native-biometrics');
     const ReactNativeBiometrics = mod?.default ?? mod;
     if (ReactNativeBiometrics) {
@@ -32,7 +32,7 @@ export function resolveDefaultAuthenticator(): BiometricAuthenticator | null {
 
   // expo-local-authentication
   try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const LocalAuthentication = require('expo-local-authentication');
     if (LocalAuthentication?.authenticateAsync) {
       return async (config?: BiometricConfig) => {

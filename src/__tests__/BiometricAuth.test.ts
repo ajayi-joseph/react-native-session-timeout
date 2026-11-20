@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-require-imports */
 import type { BiometricAuthenticator } from '../types';
 
 describe('resolveDefaultAuthenticator', () => {
@@ -83,11 +83,9 @@ describe('resolveDefaultAuthenticator', () => {
         },
         { virtual: true }
       );
-      jest.doMock(
-        'expo-local-authentication',
-        () => ({ authenticateAsync }),
-        { virtual: true }
-      );
+      jest.doMock('expo-local-authentication', () => ({ authenticateAsync }), {
+        virtual: true,
+      });
       const { resolveDefaultAuthenticator } = require('../BiometricAuth');
       const authenticator = resolveDefaultAuthenticator();
       expect(authenticator).not.toBeNull();
