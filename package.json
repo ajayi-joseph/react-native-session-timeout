@@ -18,8 +18,10 @@
   ],
   "scripts": {
     "test": "jest",
+    "test:ci": "jest --coverage",
     "typescript": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "build": "bob build",
     "prepare": "bob build",
     "release": "release-it",
     "example": "yarn --cwd example",
@@ -67,11 +69,11 @@
     "@types/jest": "^29.5.14",
     "@types/node": "^25.0.6",
     "@types/react": "^19.2.8",
-    "@types/react-native": "^0.73.0",
     "eslint": "^9.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.0",
     "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-native": "^5.0.0",
     "jest": "^29.7.0",
     "pod-install": "^1.0.9",
@@ -85,8 +87,11 @@
     "typescript-eslint": "^8.58.2"
   },
   "peerDependencies": {
-    "react": "*",
-    "react-native": "*"
+    "react": ">=17.0.0",
+    "react-native": ">=0.70.0"
+  },
+  "engines": {
+    "node": ">=20"
   },
   "jest": {
     "preset": "react-native",

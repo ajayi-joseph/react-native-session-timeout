@@ -6,5 +6,11 @@
     "emitDeclarationOnly": true,
     "declarationDir": "./lib/typescript"
   },
-  "exclude": ["node_modules", "lib", "example", "**/__tests__"]
+  "exclude": [
+    "node_modules",
+    "lib",
+    "example",
+    "**/__tests__",
+    "eslint.config.js"
+  ]
 }
