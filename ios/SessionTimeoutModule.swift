@@ -10,12 +10,10 @@ class SessionTimeoutModule: NSObject {
     private var isActive: Bool = false
     private var isPaused: Bool = false
     private var lastResetTime: Date?
-    
-    @objc
-    static func requiresMainQueueSetup() -> Bool {
-        return true
-    }
-    
+
+    // `requiresMainQueueSetup` is declared once in SessionTimeoutModule.m
+    // (the authoritative location for RCT_EXTERN_MODULE Swift modules).
+
     @objc
     func startTimer(_ timeout: Double,
                    resolver: @escaping RCTPromiseResolveBlock,
